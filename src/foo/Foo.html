@@ -1,0 +1,39 @@
+<Layout fixed>
+  <Header>
+    后台系统
+  </Header>
+  <Layout hasSider>
+    <Sider>
+      <Menu mode="inline" theme="dark" active-name="1">
+        <MenuItem name="1" o-push="/foo/1">
+          <Icon style="margin-right: 6px;" name="navigate" />
+          Foo1
+        </MenuItem>
+        <MenuItem name="2" o-push="/foo/2">
+          <Icon style="margin-right: 6px;" name="keypad" />
+          Foo2
+        </MenuItem>
+        <MenuItem name="3" o-push="/bar">
+          <Icon style="margin-right: 6px;" name="analytics" />
+          Bar
+        </MenuItem>
+        <MenuItem name="4">
+          <Icon style="margin-right: 6px;" name="analytics" />
+          <a o-push="/lazyload/1">
+            Lazyload
+          </a>
+        </MenuItem>
+      </Menu>
+    </Sider>
+    <Content>
+      <Card>
+        <CardBody>
+          <router-view />
+        </CardBody>
+      </Card>
+    </Content>
+  </Layout>
+  <Footer className="layout-footer">
+    Footer
+  </Footer>
+</Layout>
