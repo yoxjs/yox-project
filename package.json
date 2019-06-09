@@ -26,9 +26,10 @@
     "mini-css-extract-plugin": "^0.6.0",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
 
+    "html-loader": "^0.5.5",
     "file-loader": "^3.0.1",
     "glob-all": "^3.1.0",
-    "html-loader": "^0.5.5",
+
 
     "purify-css": "^1.2.5",
     "purifycss-webpack": "^0.7.0",

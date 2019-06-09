@@ -8,10 +8,26 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // 把 CSS 抽离到单独的文件
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const autoprefixer = require('autoprefixer')
 
 const prodConfig = require('./webpack.prod.conf.js')
 const devConfig = require('./webpack.dev.conf.js')
+
+const { author, license } = require('../package.json')
+
+const banner = `(c) ${new Date().getFullYear()} ${author}\n`
+             + `Released under the ${license} License.`
+
+function getFileLoader(outputPath) {
+  return [
+    {
+      loader: 'file-loader',
+      options: {
+        name: '[hash:10].[ext]',
+        outputPath: outputPath,
+      }
+    }
+  ]
+}
 
 function getStyleLoader(isDev, sourceMap, language) {
   const loaders = [
@@ -33,10 +49,7 @@ function getStyleLoader(isDev, sourceMap, language) {
     {
       loader: 'postcss-loader',
       options: {
-        sourceMap: sourceMap,
-        plugins: [
-          autoprefixer,
-        ]
+        sourceMap: sourceMap
       }
     }
   ]
@@ -73,71 +86,75 @@ const generateConfig = function (env) {
       rules: [
         // Yox 模板文件，预编译从而可以在线上切换到 runtime 版本
         {
-          test: /\/src\/.*?\.html$/,
-          use: [
-            'yox-template-loader'
-          ]
+          test: /\/src\/.*?\.html$/i,
+          use: 'yox-template-loader'
         },
         {
-          test: /\.css$/,
+          test: /\.css$/i,
           use: getStyleLoader(isDev, isDev)
         },
         {
-          test: /\.styl$/,
+          test: /\.styl$/i,
           use: getStyleLoader(isDev, isDev, 'stylus')
         },
         {
-          test: /\.less$/,
+          test: /\.less$/i,
           use: getStyleLoader(isDev, isDev, 'less')
         },
         {
-          test: /\.s[a|c]ss$/,
+          test: /\.s[a|c]ss$/i,
           use: getStyleLoader(isDev, isDev, 'sass')
         },
         {
-          test: /\.(png|jpg|jpeg|gif)$/,
+          test: /\.ico$/i,
+          use: getFileLoader('icon/')
+        },
+        {
+          test: /\.(png|jpe?g|gif|webp|svg)$/i,
           use: [
             {
               loader: 'url-loader',
               options: {
-                name: '[name]-[hash:5].min.[ext]',
-                limit: 1000, // size <= 1KB
+                name: '[hash:10].[ext]',
+                // 图片小于 1KB 会转成 base64 图片
+                // 图片大于或等于 1KB 就会切换到 file-loader
+                // 并把 options 传给 file-loader
+                limit: 1000,
                 outputPath: 'img/'
               }
             },
-            // img-loader for zip img
             {
               loader: 'image-webpack-loader',
               options: {
-                // 压缩 jpg/jpeg 图片
+                // https://www.npmjs.com/package/imagemin-mozjpeg#options
                 mozjpeg: {
-                  // 渐进式加载
                   progressive: true,
-                  // 压缩率 0-100
                   quality: 65
                 },
-                // 压缩 png 图片
+                // https://www.npmjs.com/package/imagemin-pngquant#options
                 pngquant: {
-                  quality: '65-90',
+                  quality: '65-80',
                   speed: 4
+                },
+                // https://www.npmjs.com/package/imagemin-gifsicle#options
+                gifsicle: {
+                  interlaced: false,
+                },
+                // https://github.com/svg/svgo#what-it-can-do
+                svgo: {
+
+                },
+                // https://www.npmjs.com/package/imagemin-webp#options
+                webp: {
+                  quality: 75
                 }
               }
             }
           ]
         },
         {
-          test: /\.(eot|woff2?|ttf|svg)$/,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                name: '[name]-[hash:5].min.[ext]',
-                limit: 5000, // fonts file size <= 5KB, use 'base64'; else, output svg file
-                publicPath: 'font/',
-                outputPath: 'font/'
-              }
-            }
-          ]
+          test: /\.(eot|woff2?|ttf)$/i,
+          use: getFileLoader('font/')
         }
       ]
     },
@@ -174,6 +191,9 @@ const generateConfig = function (env) {
         filename: isDev ? '[name].css' : '[name].[hash].css',
         chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
       }),
+
+      new webpack.BannerPlugin(banner)
+
     ],
 
     optimization: {
