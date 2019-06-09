@@ -1,4 +1,4 @@
-import template from './Lazyload.html'
+import template from './Lazyload.hbs'
 
 export default {
   template

@@ -84,9 +84,16 @@ const generateConfig = function (env) {
     },
     module: {
       rules: [
-        // Yox 模板文件，预编译从而可以在线上切换到 runtime 版本
+        // 编译 TypeScript
         {
-          test: /\/src\/.*?\.html$/i,
+          test: /\.ts?$/i,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        },
+        // 预编译 Yox 模板文件，从而可以在线上切换到 runtime 版本
+        // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
+        {
+          test: /\/src\/.*?\.hbs$/i,
           use: 'yox-template-loader'
         },
         {

@@ -1,5 +1,5 @@
 import './Foo.styl'
-import template from './Foo.html'
+import template from './Foo.hbs'
 
 export default {
   template,

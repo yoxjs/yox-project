@@ -1,4 +1,4 @@
-import template from './Foo1.html'
+import template from './Foo1.hbs'
 
 export default {
   template
