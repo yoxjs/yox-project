@@ -22,6 +22,10 @@ module.exports = {
     },
     historyApiFallback: true
   },
+  optimization: {
+    // 是否压缩 js
+    minimize: false,
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin()

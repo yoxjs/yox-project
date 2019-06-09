@@ -8,7 +8,10 @@ const glob = require('glob-all')
 
 module.exports = {
   mode: 'production',
-
+  optimization: {
+    // 是否压缩 js
+    minimize: true,
+  },
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',

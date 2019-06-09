@@ -1,6 +1,7 @@
-const merge = require('../node_modules/webpack-merge/lib')
 const path = require('path')
+
 const webpack = require('webpack')
+const webpackMerge = require('webpack-merge')
 
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -90,7 +91,7 @@ const generateConfig = function (env) {
           use: getStyleLoader(isDev, isDev, 'less')
         },
         {
-          test: /\.sass$/,
+          test: /\.s[a|c]ss$/,
           use: getStyleLoader(isDev, isDev, 'sass')
         },
         {
@@ -176,9 +177,6 @@ const generateConfig = function (env) {
     ],
 
     optimization: {
-      // 是否压缩 js
-      minimize: isDev ? false : false,
-
       splitChunks: {
         /*
             选择哪些 chunk 进行优化，可选值如下：
@@ -237,5 +235,5 @@ const generateConfig = function (env) {
 
 module.exports = function (env) {
   let config = env === 'production' ? prodConfig : devConfig
-  return merge(generateConfig(env), config)
+  return webpackMerge(generateConfig(env), config)
 }
