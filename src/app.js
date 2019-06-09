@@ -44,7 +44,7 @@ var router = new YoxRouter.Router({
     {
       path: '/lazyload',
       load(callback) {
-        import(/* webpackChunkName: "./lazyload/route"*/ './lazyload/route').then(
+        import(/* webpackChunkName: "lazyload" */ './lazyload/route').then(
           function (route) {
             callback(route.default)
           }

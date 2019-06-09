@@ -32,7 +32,7 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.7.0",
     "webpack-merge": "^4.2.1",
-    "yox-template-loader": "0.0.6"
+    "yox-template-loader": "0.0.7"
   },
   "dependencies": {
     "bell-ui": "^0.6.0",
