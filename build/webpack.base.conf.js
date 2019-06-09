@@ -24,7 +24,9 @@ function getStyleLoader(isDev, sourceMap, language) {
     {
       loader: 'css-loader',
       options: {
-        sourceMap: sourceMap
+        sourceMap: sourceMap,
+        // 在一个 css 中引入了另一个 css，也会执行上一个 loader，即 postcss
+        importLoaders: 1
       }
     },
     {
@@ -203,6 +205,14 @@ const generateConfig = function (env) {
         name: true,
 
         cacheGroups: {
+          yox: {
+            test: /[\\/]node_modules[\\/]yox[\\/]/,
+            priority: 10
+          },
+          'yox-router': {
+            test: /[\\/]node_modules[\\/]yox-router[\\/]/,
+            priority: 10
+          },
           // node_modules 中的同步模块会被打包到 vendor~*.js
           vendor: {
             test: /[\\/]node_modules[\\/]/,

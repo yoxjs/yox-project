@@ -8,35 +8,7 @@ const glob = require('glob-all')
 
 module.exports = {
   mode: 'production',
-  
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-      minSize: 30000,
-      maxSize: 0,
-      minChunks: 1,
-      maxAsyncRequests: 5,
-      maxInitialRequests: 3,
-      automaticNameDelimiter: '~',
-      name: true,
-      cacheGroups: {
-        yox: {
-          name: 'yox',
-          test: /[\\/]node_modules[\\/]yox[\\/]/,
-          priority: 10
-        },
-        vendors: {
-          test: /[\\/]node_modules[\\/]/,
-          priority: -10
-        },
-        default: {
-          minChunks: 2,
-          priority: -20,
-          reuseExistingChunk: true
-        }
-      }
-    }
-  },
+
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css',
