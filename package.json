@@ -9,7 +9,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^9.5.1",
     "clean-webpack-plugin": "^2.0.2",
@@ -31,13 +31,13 @@
     "webpack": "^4.33.0",
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.7.0",
-    "yox": "^1.0.0-alpha.55"
+    "webpack-merge": "^4.2.1",
+    "yox-template-loader": "0.0.6"
   },
   "dependencies": {
     "bell-ui": "^0.6.0",
     "lodash": "^4.17.11",
-    "webpack-merge": "^4.2.1",
-    "yox-router": "^1.0.0-alpha15",
-    "yox-template-loader": "0.0.6"
+    "yox": "^1.0.0-alpha.57",
+    "yox-router": "^1.0.0-alpha17"
   }
 }

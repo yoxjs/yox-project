@@ -1,6 +1,6 @@
 import Yox from 'yox'
 import * as YoxRouter from 'yox-router'
-import * as bellUI from 'bell-ui'
+import * as Bell from 'bell-ui'
 
 import FooComponent from './foo/Foo'
 import Foo1Component from './foo/Foo1'
@@ -9,7 +9,7 @@ import BarComponent from './bar/Bar'
 import 'bell-ui/dist/bell-ui.css'
 
 Yox.use(YoxRouter)
-Yox.use(bellUI)
+Yox.use(Bell)
 
 var router = new YoxRouter.Router({
   el: '#app',
@@ -40,15 +40,17 @@ var router = new YoxRouter.Router({
       path: '/bar',
       component: BarComponent
     },
-    
-    // {
-    //   path: '/lazyload',
-    //   load(callback) {
-    //     import(/* webpackChunkName: 'lazyload'*/ './lazyload/route').then(function(route) {
-    //       callback(route.default)
-    //     })
-    //   }
-    // }
+
+    {
+      path: '/lazyload',
+      load(callback) {
+        import(/* webpackChunkName: "./lazyload/route"*/ './lazyload/route').then(
+          function (route) {
+            callback(route.default)
+          }
+        )
+      }
+    }
   ],
   route404: {
     path: '/404',
@@ -57,5 +59,6 @@ var router = new YoxRouter.Router({
     }
   }
 })
+
 
 router.start()
