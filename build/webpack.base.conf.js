@@ -1,5 +1,6 @@
 const merge = require('../node_modules/webpack-merge/lib')
 const path = require('path')
+const webpack = require('webpack')
 
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -9,6 +10,8 @@ const prodConfig = require('./webpack.prod.conf.js')
 const devConfig = require('./webpack.dev.conf.js')
 
 const generateConfig = function (env) {
+
+  let isDev = env !== 'production'
 
   let cssLoader = [
     'style-loader',
@@ -36,10 +39,7 @@ const generateConfig = function (env) {
     'stylus-loader'
   ]
 
-  let styleLoader =
-    env === 'production'
-      ? cssExtractLoader
-      : cssLoader
+  let styleLoader = isDev ? cssLoader : cssExtractLoader
 
   return {
     entry: {
@@ -47,13 +47,13 @@ const generateConfig = function (env) {
     },
     output: {
       // js 引用的路径或者 CDN 地址
-      publicPath: env === 'development' ? '/' : './',
+      publicPath: isDev ? '/' : './',
       // 打包文件的输出目录
       path: path.resolve(__dirname, '../', 'dist'),
       // 代码打包后的文件名
-      filename: '[name]-[hash:5].bundle.js',
+      filename: '[name]-[contenthash].js',
       // 非入口文件的文件名
-      chunkFilename: '[name]-[hash:5].chunk.js',
+      chunkFilename: '[name]-[contenthash].chunk.js',
     },
     module: {
       rules: [
@@ -144,9 +144,14 @@ const generateConfig = function (env) {
         // 根据此模版生成 HTML 文件
         template: 'view/index.html'
       }),
+
+      new webpack.HashedModuleIdsPlugin()
     ],
 
     optimization: {
+      // 是否压缩 js
+      minimize: isDev ? false : false,
+
       splitChunks: {
         /*
             选择哪些 chunk 进行优化，可选值如下：
@@ -176,17 +181,22 @@ const generateConfig = function (env) {
           // node_modules 中的同步模块会被打包到 vendor~*.js
           vendor: {
             test: /[\\/]node_modules[\\/]/,
+            // 一个 chunk 很可能满足多个缓存组，会被抽取到优先级高的缓存组中
             priority: -10
           },
           // 其他的所有同步模块会被打包到 common~*.js中
           common: {
             minChunks: 2,
             priority: -20,
+            // 如果该 chunk 中引用了已经被抽取的 chunk，直接引用该 chunk，不会重复打包代码
             reuseExistingChunk: true
           }
         }
-      }
-    }
+      },
+      // 把 webpack runtime 的基础函数提取出来
+      runtimeChunk: 'single'
+    },
+
   }
 }
 
