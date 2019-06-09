@@ -4,42 +4,53 @@ const webpack = require('webpack')
 
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('../node_modules/mini-css-extract-plugin/dist/cjs')
+
+// 把 CSS 抽离到单独的文件
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const autoprefixer = require('autoprefixer')
 
 const prodConfig = require('./webpack.prod.conf.js')
 const devConfig = require('./webpack.dev.conf.js')
 
+function getStyleLoader(isDev, sourceMap, language) {
+  const loaders = [
+    {
+      loader: MiniCssExtractPlugin.loader,
+      options: {
+        sourceMap: sourceMap,
+        hmr: isDev,
+      },
+    },
+    {
+      loader: 'css-loader',
+      options: {
+        sourceMap: sourceMap
+      }
+    },
+    {
+      loader: 'postcss-loader',
+      options: {
+        sourceMap: sourceMap,
+        plugins: [
+          autoprefixer,
+        ]
+      }
+    }
+  ]
+  if (language) {
+    loaders.push({
+      loader: language + '-loader',
+      options: {
+        sourceMap: sourceMap
+      }
+    })
+  }
+  return loaders
+}
+
 const generateConfig = function (env) {
 
   let isDev = env !== 'production'
-
-  let cssLoader = [
-    'style-loader',
-    'css-loader',
-    {
-      loader: 'postcss-loader',
-      options: {
-        plugins: [require('../node_modules/autoprefixer/lib/autoprefixer')]
-      }
-    },
-    'stylus-loader'
-  ]
-
-  let cssExtractLoader = [
-    {
-      loader: MiniCssExtractPlugin.loader
-    },
-    'css-loader',
-    {
-      loader: 'postcss-loader',
-      options: {
-        plugins: [require('../node_modules/autoprefixer/lib/autoprefixer')]
-      }
-    },
-    'stylus-loader'
-  ]
-
-  let styleLoader = isDev ? cssLoader : cssExtractLoader
 
   return {
     entry: {
@@ -47,23 +58,17 @@ const generateConfig = function (env) {
     },
     output: {
       // js 引用的路径或者 CDN 地址
-      publicPath: isDev ? '/' : './',
+      // publicPath: isDev ? '/' : './',
       // 打包文件的输出目录
       path: path.resolve(__dirname, '../', 'dist'),
       // 代码打包后的文件名
-      filename: '[name]-[contenthash].js',
+      filename: '[name]-[hash:10].js',
       // 非入口文件的文件名
-      chunkFilename: '[name]-[contenthash].chunk.js',
+      chunkFilename: '[name]-[hash:10].chunk.js',
     },
     module: {
       rules: [
-        {
-          test: /\.css$/,
-          use: [
-            'style-loader',
-            'css-loader'
-          ]
-        },
+        // Yox 模板文件，预编译从而可以在线上切换到 runtime 版本
         {
           test: /\/src\/.*?\.html$/,
           use: [
@@ -71,8 +76,20 @@ const generateConfig = function (env) {
           ]
         },
         {
+          test: /\.css$/,
+          use: getStyleLoader(isDev, isDev)
+        },
+        {
           test: /\.styl$/,
-          use: styleLoader
+          use: getStyleLoader(isDev, isDev, 'stylus')
+        },
+        {
+          test: /\.less$/,
+          use: getStyleLoader(isDev, isDev, 'less')
+        },
+        {
+          test: /\.sass$/,
+          use: getStyleLoader(isDev, isDev, 'sass')
         },
         {
           test: /\.(png|jpg|jpeg|gif)$/,
@@ -145,7 +162,15 @@ const generateConfig = function (env) {
         template: 'view/index.html'
       }),
 
-      new webpack.HashedModuleIdsPlugin()
+      // 为了保证公共 chunk 的 hash 不变
+      new webpack.HashedModuleIdsPlugin(),
+
+      new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
+        filename: isDev ? '[name].css' : '[name].[hash].css',
+        chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
+      }),
     ],
 
     optimization: {
