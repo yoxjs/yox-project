@@ -1,16 +1,12 @@
 const path = require('path')
 
 const webpack = require('webpack')
-const webpackMerge = require('webpack-merge')
 
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // 把 CSS 抽离到单独的文件
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
-const prodConfig = require('./webpack.prod.conf.js')
-const devConfig = require('./webpack.dev.conf.js')
 
 const { author, license } = require('../package.json')
 
@@ -64,13 +60,11 @@ function getStyleLoader(isDev, sourceMap, language) {
   return loaders
 }
 
-const generateConfig = function (env) {
-
-  let isDev = env !== 'production'
+exports.create = function (isDev) {
 
   return {
     entry: {
-      app: './src/app.js'
+      app: './src/app.ts'
     },
     output: {
       // js 引用的路径或者 CDN 地址
@@ -81,6 +75,9 @@ const generateConfig = function (env) {
       filename: '[name]-[hash:10].js',
       // 非入口文件的文件名
       chunkFilename: '[name]-[hash:10].chunk.js',
+    },
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
     },
     module: {
       rules: [
@@ -258,9 +255,4 @@ const generateConfig = function (env) {
     },
 
   }
-}
-
-module.exports = function (env) {
-  let config = env === 'production' ? prodConfig : devConfig
-  return webpackMerge(generateConfig(env), config)
 }
