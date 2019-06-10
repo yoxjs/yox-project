@@ -5,9 +5,6 @@ const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 
-const PurifyCSS = require('purifycss-webpack')
-const glob = require('glob-all')
-
 const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
@@ -35,16 +32,6 @@ module.exports = merge(
         cssProcessorOptions: { safe: true, discardComments: { removeAll: true } }, //传递给 cssProcessor 的选项，默认为{}
         canPrint: true //一个布尔值，指示插件是否可以将消息打印到控制台，默认为 true
       }),
-      // 清除无用 css
-      new PurifyCSS({
-        paths: glob.sync([
-          // 要做 CSS Tree Shaking 的路径文件
-          // 请注意，我们同样需要对 html 文件进行 tree shaking
-          path.resolve(__dirname, '..', 'view', '*.html'),
-          path.resolve(__dirname, '..', 'src', '*.html'),
-          path.resolve(__dirname, '..', 'src', '*.js'),
-        ])
-      })
     ]
   }
 )
