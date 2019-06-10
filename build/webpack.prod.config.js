@@ -18,6 +18,10 @@ module.exports = merge(
       minimize: false,
     },
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env': require('../config/prod.env.js')
+      }),
+
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: '[id].css'

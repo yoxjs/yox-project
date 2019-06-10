@@ -31,6 +31,10 @@ module.exports = merge(
       minimize: false,
     },
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env': require('../config/dev.env.js')
+      }),
+
       new webpack.HotModuleReplacementPlugin(),
     ]
   }

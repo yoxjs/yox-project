@@ -9,6 +9,11 @@ module.exports = merge(
     optimization: {
       // 是否压缩 js
       minimize: false,
-    }
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': require('../config/test.env.js')
+      }),
+    ]
   }
 )
