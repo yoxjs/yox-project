@@ -2,6 +2,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') //
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 const path = require('path')
+const webpack = require('webpack')
 const merge = require('webpack-merge')
 
 const PurifyCSS = require('purifycss-webpack')
@@ -11,6 +12,7 @@ const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
   baseConfig.create(false),
+  baseConfig.loadStyle(true, false),
   {
     mode: 'production',
     optimization: {

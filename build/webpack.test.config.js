@@ -3,6 +3,7 @@ const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
   baseConfig.create(true),
+  baseConfig.loadStyle(true, false),
   {
     mode: 'development',
     devtool: 'inline-source-map',

@@ -1,17 +1,24 @@
+const path = require('path')
+
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 
-const path = require('path')
+const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
+
 const baseConfig = require('./webpack.base.config.js')
+
+const port = 8000
 
 module.exports = merge(
   baseConfig.create(true),
+  baseConfig.loadStyle(false, true),
   {
     mode: 'development',
     devtool: 'inline-source-map',
     devServer: {
       contentBase: path.join(__dirname, '..', 'dist'),
-      port: 8000,
+      host: 'localhost',
+      port: port,
       hot: true,
       overlay: true,
       proxy: {
@@ -34,7 +41,9 @@ module.exports = merge(
       new webpack.DefinePlugin({
         'process.env': require('../config/dev.env.js')
       }),
-
+      new CaseSensitivePathsPlugin({
+        debug: true
+      }),
       new webpack.HotModuleReplacementPlugin(),
     ]
   }

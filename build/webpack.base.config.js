@@ -25,41 +25,6 @@ function getFileLoader(outputPath) {
   ]
 }
 
-function getStyleLoader(isDev, sourceMap, language) {
-  const loaders = [
-    {
-      loader: MiniCssExtractPlugin.loader,
-      options: {
-        sourceMap: sourceMap,
-        hmr: isDev,
-      },
-    },
-    {
-      loader: 'css-loader',
-      options: {
-        sourceMap: sourceMap,
-        // 在一个 css 中引入了另一个 css，也会执行上一个 loader，即 postcss
-        importLoaders: 1
-      }
-    },
-    {
-      loader: 'postcss-loader',
-      options: {
-        sourceMap: sourceMap
-      }
-    }
-  ]
-  if (language) {
-    loaders.push({
-      loader: language + '-loader',
-      options: {
-        sourceMap: sourceMap
-      }
-    })
-  }
-  return loaders
-}
-
 exports.create = function (isDev) {
 
   return {
@@ -68,7 +33,7 @@ exports.create = function (isDev) {
     },
     output: {
       // js 引用的路径或者 CDN 地址
-      // publicPath: isDev ? '/' : './',
+      publicPath: isDev ? '/' : './',
       // 打包文件的输出目录
       path: path.resolve(__dirname, '../', 'dist'),
       // 代码打包后的文件名
@@ -93,22 +58,7 @@ exports.create = function (isDev) {
           test: /\/src\/.*?\.hbs$/i,
           use: 'yox-template-loader'
         },
-        {
-          test: /\.css$/i,
-          use: getStyleLoader(isDev, isDev)
-        },
-        {
-          test: /\.styl$/i,
-          use: getStyleLoader(isDev, isDev, 'stylus')
-        },
-        {
-          test: /\.less$/i,
-          use: getStyleLoader(isDev, isDev, 'less')
-        },
-        {
-          test: /\.s[a|c]ss$/i,
-          use: getStyleLoader(isDev, isDev, 'sass')
-        },
+
         {
           test: /\.ico$/i,
           use: getFileLoader('icon/')
@@ -189,14 +139,7 @@ exports.create = function (isDev) {
       // 为了保证公共 chunk 的 hash 不变
       new webpack.HashedModuleIdsPlugin(),
 
-      new MiniCssExtractPlugin({
-        // Options similar to the same options in webpackOptions.output
-        // both options are optional
-        filename: isDev ? '[name].css' : '[name].[hash].css',
-        chunkFilename: isDev ? '[id].css' : '[id].[hash].css',
-      }),
-
-      new webpack.BannerPlugin(banner)
+      new webpack.BannerPlugin(banner),
 
     ],
 
@@ -255,4 +198,76 @@ exports.create = function (isDev) {
     },
 
   }
+}
+
+exports.loadStyle = function (separateStyle, sourceMap) {
+
+  const options = {
+    sourceMap: sourceMap
+  }
+
+  // 是否需要分离出样式文件，分离文件可避免 js 加载完成前的白屏
+  const loaders = [
+    separateStyle
+      ? {
+        loader: MiniCssExtractPlugin.loader,
+        options: options
+      }
+      : {
+        loader: 'style-loader',
+        options: options
+      },
+    {
+      loader: 'postcss-loader',
+      options: options
+    },
+    {
+      loader: 'css-loader',
+      options: options
+    }
+  ]
+
+  const plugins = []
+  if (separateStyle) {
+    plugins.push(
+      new MiniCssExtractPlugin({
+        filename: 'style/[hash:10].css',
+        chunkFilename: 'style/[hash:10].css',
+      }),
+    )
+  }
+
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.css$/i,
+          use: loaders
+        },
+        {
+          test: /\.styl$/i,
+          use: loaders.concat({
+            loader: 'stylus-loader',
+            options: options
+          })
+        },
+        {
+          test: /\.less$/i,
+          use: loaders.concat({
+            loader: 'less-loader',
+            options: options
+          })
+        },
+        {
+          test: /\.s[a|c]ss$/i,
+          use: loaders.concat({
+            loader: 'sass-loader',
+            options: options
+          })
+        },
+      ]
+    },
+    plugins: plugins
+  }
+
 }
