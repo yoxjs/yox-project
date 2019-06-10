@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack --env production --config build/webpack.base.conf.js",
-    "dev": "webpack-dev-server --env development --open --config build/webpack.base.conf.js"
+    "build": "./node_modules/.bin/webpack --config build/webpack.base.prod.js",
+    "dev": "webpack-dev-server --open --config build/webpack.base.dev.js"
   },
   "keywords": [],
   "author": "",
