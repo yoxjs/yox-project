@@ -3,7 +3,11 @@ const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
   baseConfig.create(true),
+  baseConfig.loadTemplate(),
+  baseConfig.loadScript(),
   baseConfig.loadStyle(true, false),
+  baseConfig.loadImage(),
+  baseConfig.loadFont(),
   {
     mode: 'development',
     devtool: 'inline-source-map',

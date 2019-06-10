@@ -11,7 +11,11 @@ const port = 8000
 
 module.exports = merge(
   baseConfig.create(true),
+  baseConfig.loadTemplate(),
+  baseConfig.loadScript(),
   baseConfig.loadStyle(false, true),
+  baseConfig.loadImage(),
+  baseConfig.loadFont(),
   {
     mode: 'development',
     devtool: 'inline-source-map',

@@ -9,7 +9,11 @@ const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
   baseConfig.create(false),
+  baseConfig.loadTemplate(),
+  baseConfig.loadScript(),
   baseConfig.loadStyle(true, false),
+  baseConfig.loadImage(),
+  baseConfig.loadFont(),
   {
     mode: 'production',
     optimization: {

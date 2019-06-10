@@ -13,16 +13,17 @@ const { author, license } = require('../package.json')
 const banner = `(c) ${new Date().getFullYear()} ${author}\n`
              + `Released under the ${license} License.`
 
-function getFileLoader(outputPath) {
-  return [
-    {
-      loader: 'file-loader',
-      options: {
-        name: '[hash:10].[ext]',
-        outputPath: outputPath,
-      }
-    }
-  ]
+function getFileLoaderOptions(outputPath) {
+  return {
+    name: '[hash:10].[ext]',
+    outputPath: outputPath,
+  }
+}
+
+function getUrlLoaderOptions(outputPath, limit) {
+  const options = getFileLoaderOptions(outputPath)
+  options.limit = limit
+  return options
 }
 
 exports.create = function (isDev) {
@@ -40,77 +41,6 @@ exports.create = function (isDev) {
       filename: '[name]-[hash:10].js',
       // 非入口文件的文件名
       chunkFilename: '[name]-[hash:10].chunk.js',
-    },
-    resolve: {
-      extensions: ['.ts', '.js', '.json']
-    },
-    module: {
-      rules: [
-        // 编译 TypeScript
-        {
-          test: /\.ts?$/i,
-          use: 'ts-loader',
-          exclude: /node_modules/
-        },
-        // 预编译 Yox 模板文件，从而可以在线上切换到 runtime 版本
-        // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
-        {
-          test: /\/src\/.*?\.hbs$/i,
-          use: 'yox-template-loader'
-        },
-
-        {
-          test: /\.ico$/i,
-          use: getFileLoader('icon/')
-        },
-        {
-          test: /\.(png|jpe?g|gif|webp|svg)$/i,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                name: '[hash:10].[ext]',
-                // 图片小于 1KB 会转成 base64 图片
-                // 图片大于或等于 1KB 就会切换到 file-loader
-                // 并把 options 传给 file-loader
-                limit: 1000,
-                outputPath: 'img/'
-              }
-            },
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                // https://www.npmjs.com/package/imagemin-mozjpeg#options
-                mozjpeg: {
-                  progressive: true,
-                  quality: 65
-                },
-                // https://www.npmjs.com/package/imagemin-pngquant#options
-                pngquant: {
-                  quality: '65-80',
-                  speed: 4
-                },
-                // https://www.npmjs.com/package/imagemin-gifsicle#options
-                gifsicle: {
-                  interlaced: false,
-                },
-                // https://github.com/svg/svgo#what-it-can-do
-                svgo: {
-
-                },
-                // https://www.npmjs.com/package/imagemin-webp#options
-                webp: {
-                  quality: 75
-                }
-              }
-            }
-          ]
-        },
-        {
-          test: /\.(eot|woff2?|ttf)$/i,
-          use: getFileLoader('font/')
-        }
-      ]
     },
     plugins: [
       // 清空 output.path 目录
@@ -200,6 +130,49 @@ exports.create = function (isDev) {
   }
 }
 
+exports.loadTemplate = function () {
+  return {
+    module: {
+      rules: [
+        // 预编译 Yox 模板文件，从而可以在线上切换到 runtime 版本
+        // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
+        {
+          test: /\/src\/.*?\.hbs$/i,
+          use: 'yox-template-loader'
+        }
+      ]
+    }
+  }
+}
+
+exports.loadScript = function () {
+
+  return {
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    module: {
+      rules: [
+        // {
+        //   test: /\.ts$/i,
+        //   enforce: 'pre',
+        //   use: 'eslint-loader',
+        //   exclude: /node_modules/,
+        //   options: {
+        //     formatter: require('eslint-friendly-formatter')
+        //   }
+        // },
+        {
+          test: /\.ts$/i,
+          use: 'ts-loader',
+          exclude: /node_modules/
+        }
+      ]
+    }
+  }
+
+}
+
 exports.loadStyle = function (separateStyle, sourceMap) {
 
   const options = {
@@ -270,4 +243,76 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     plugins: plugins
   }
 
+}
+
+exports.loadImage = function () {
+
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.ico$/i,
+          use: {
+            loader: 'file-loader',
+            options: getFileLoaderOptions('icon/')
+          }
+        },
+        {
+          test: /\.(png|jpe?g|gif|webp|svg)$/i,
+          use: [
+            {
+              loader: 'url-loader',
+              // 图片小于 1KB 会转成 base64 图片
+              // 图片大于或等于 1KB 就会切换到 file-loader
+              // 并把 options 传给 file-loader
+              options: getUrlLoaderOptions('img/', 1000)
+            },
+            {
+              loader: 'image-webpack-loader',
+              options: {
+                // https://www.npmjs.com/package/imagemin-mozjpeg#options
+                mozjpeg: {
+                  progressive: true,
+                  quality: 65
+                },
+                // https://www.npmjs.com/package/imagemin-pngquant#options
+                pngquant: {
+                  quality: '65-80',
+                  speed: 4
+                },
+                // https://www.npmjs.com/package/imagemin-gifsicle#options
+                gifsicle: {
+                  interlaced: false,
+                },
+                // https://github.com/svg/svgo#what-it-can-do
+                svgo: {
+
+                },
+                // https://www.npmjs.com/package/imagemin-webp#options
+                webp: {
+                  quality: 75
+                }
+              }
+            }
+          ]
+        },
+      ]
+    }
+  }
+}
+
+exports.loadFont = function () {
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.(ttf|eot|woff|woff2)$/i,
+          use: {
+            loader: 'file-loader',
+            options: getFileLoaderOptions('font/')
+          }
+        }
+      ]
+    }
+  }
 }
