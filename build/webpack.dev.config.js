@@ -10,7 +10,7 @@ const baseConfig = require('./webpack.base.config.js')
 const port = 8000
 
 module.exports = merge(
-  baseConfig.create(true),
+  baseConfig.create(),
   baseConfig.loadTemplate(),
   baseConfig.loadScript(),
   baseConfig.loadStyle(false, true),

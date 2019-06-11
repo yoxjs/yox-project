@@ -7,7 +7,7 @@ import Foo1Component from './foo/Foo1'
 import Foo2Component from './foo/Foo2'
 import BarComponent from './bar/Bar'
 
-// import 'bell-ui/dist/bell-ui.css'
+import 'bell-ui/dist/bell-ui.css'
 
 Yox.use(YoxRouter)
 Yox.use(Bell)

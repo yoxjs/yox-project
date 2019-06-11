@@ -15,6 +15,7 @@ const banner = `(c) ${new Date().getFullYear()} ${author}\n`
 const srcDir = path.resolve(__dirname, '..', 'src')
 const viewDir = path.resolve(__dirname, '..', 'view')
 const distDir = path.resolve(__dirname, '..', 'dist')
+const thirdDir = path.resolve(__dirname, '..', 'node_modules')
 
 function getFileLoaderOptions(outputPath) {
   return {
@@ -29,7 +30,7 @@ function getUrlLoaderOptions(outputPath, limit) {
   return options
 }
 
-exports.create = function (isDev) {
+exports.create = function () {
 
   return {
     entry: {
@@ -210,40 +211,56 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     {
       loader: 'css-loader',
       options: options
-    },
-    {
-      loader: 'postcss-loader',
-      options: options
     }
   )
 
   return {
     module: {
       rules: [
+        // 有些第三方库，会给 css 加上厂商前缀，为了避免混乱
+        // 我们认为 .css 文件是最终形态，因此不加 postcss 了
         {
           test: /\.css$/i,
-          use: loaders
+          use: loaders,
         },
         {
           test: /\.styl$/i,
-          use: loaders.concat({
-            loader: 'stylus-loader',
-            options: options
-          })
+          use: loaders.concat([
+            {
+              loader: 'postcss-loader',
+              options: options
+            },
+            {
+              loader: 'stylus-loader',
+              options: options
+            }
+          ])
         },
         {
           test: /\.less$/i,
-          use: loaders.concat({
-            loader: 'less-loader',
-            options: options
-          })
+          use: loaders.concat([
+            {
+              loader: 'postcss-loader',
+              options: options
+            },
+            {
+              loader: 'less-loader',
+              options: options
+            }
+          ])
         },
         {
           test: /\.s[a|c]ss$/i,
-          use: loaders.concat({
-            loader: 'sass-loader',
-            options: options
-          })
+          use: loaders.concat([
+            {
+              loader: 'postcss-loader',
+              options: options
+            },
+            {
+              loader: 'sass-loader',
+              options: options
+            }
+          ])
         },
       ]
     },

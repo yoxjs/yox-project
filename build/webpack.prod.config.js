@@ -9,7 +9,7 @@ const merge = require('webpack-merge')
 const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
-  baseConfig.create(false),
+  baseConfig.create(),
   baseConfig.loadTemplate(),
   baseConfig.loadScript(),
   baseConfig.loadStyle(true, false),
