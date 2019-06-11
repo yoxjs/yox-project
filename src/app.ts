@@ -2,6 +2,11 @@ import Yox from 'yox'
 import * as YoxRouter from 'yox-router'
 import * as Bell from 'bell-ui'
 
+import fetch from 'unfetch'
+import { format, compareAsc } from 'date-fns/esm'
+
+console.log(format(new Date(2014, 1, 11), 'MM/dd/yyyy'))
+
 import FooComponent from './foo/Foo'
 import Foo1Component from './foo/Foo1'
 import Foo2Component from './foo/Foo2'
@@ -60,6 +65,5 @@ var router = new YoxRouter.Router({
     }
   }
 })
-
 
 router.start()
