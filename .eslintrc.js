@@ -10,10 +10,19 @@ module.exports = {
     },
     // http://eslint.cn/docs/rules/
     rules: {
+        // 缩进两空格
         "indent": ["error", 2],
-        "quotes": ["error", "double"],
-        "semi": ["error", "always"],
+        // 单引号
+        "quotes": ["error", "single"],
+        // 不要分号
+        "semi": ["error", "never"],
+        // 使用 UNIX 换行符
+        "linebreak-style": ["error", "unix"],
+
+        // 对象禁止重复的 key
+        "no-dupe-keys": "error",
         "no-console": "error",
+        "no-debugger": "error",
         "arrow-parens": 0
     }
 }

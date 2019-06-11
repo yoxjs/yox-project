@@ -140,7 +140,7 @@ exports.loadTemplate = function () {
         {
           test: /\/src\/.*?\.hbs$/i,
           use: 'yox-template-loader',
-          exclude: /node_modules/
+          include: srcDir
         }
       ]
     }
@@ -155,19 +155,18 @@ exports.loadScript = function () {
     },
     module: {
       rules: [
-        // {
-        //   test: /\.ts$/i,
-        //   enforce: 'pre',
-        //   use: 'eslint-loader',
-        //   exclude: /node_modules/,
-        //   options: {
-        //     formatter: require('eslint-friendly-formatter')
-        //   }
-        // },
+        {
+          enforce: 'pre',
+          test: /\.[t|j]s$/i,
+          loader: 'eslint-loader',
+          include: srcDir,
+          options: {
+            formatter: require('eslint-friendly-formatter')
+          }
+        },
         {
           test: /\.ts$/i,
           use: 'ts-loader',
-          exclude: /node_modules/
         }
       ]
     }
