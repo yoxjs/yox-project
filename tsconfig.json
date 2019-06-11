@@ -1,12 +1,9 @@
 {
   "compilerOptions": {
-    // 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018', 'ESNEXT'
-    "target": "ESNEXT",
-    // 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', 'ESNext'
-    "module": "commonjs",
+    "module": "esnext",
+    "target": "es5",
 
     "outDir": "./dist/",
-    "rootDir": "./src/",
 
     "allowJs": true,
     "sourceMap": true,

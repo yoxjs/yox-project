@@ -1,3 +1,5 @@
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+
 const merge = require('webpack-merge')
 const baseConfig = require('./webpack.base.config.js')
 
@@ -16,6 +18,8 @@ module.exports = merge(
       minimize: false,
     },
     plugins: [
+      // 清空 output.path 目录
+      new CleanWebpackPlugin(),
       new webpack.DefinePlugin({
         'process.env': require('../config/test.env.js')
       }),

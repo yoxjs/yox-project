@@ -2,7 +2,6 @@ const path = require('path')
 
 const webpack = require('webpack')
 
-const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // 把 CSS 抽离到单独的文件
@@ -12,6 +11,10 @@ const { author, license } = require('../package.json')
 
 const banner = `(c) ${new Date().getFullYear()} ${author}\n`
              + `Released under the ${license} License.`
+
+const srcDir = path.resolve(__dirname, '..', 'src')
+const viewDir = path.resolve(__dirname, '..', 'view')
+const distDir = path.resolve(__dirname, '..', 'dist')
 
 function getFileLoaderOptions(outputPath) {
   return {
@@ -30,22 +33,19 @@ exports.create = function (isDev) {
 
   return {
     entry: {
-      app: './src/app.ts'
+      app: path.resolve(srcDir, 'app.ts')
     },
     output: {
-      // js 引用的路径或者 CDN 地址
-      publicPath: isDev ? '/' : './',
       // 打包文件的输出目录
-      path: path.resolve(__dirname, '../', 'dist'),
+      path: distDir,
+      // path 对应的公开 URL
+      publicPath: '/',
       // 代码打包后的文件名
       filename: '[name]-[hash:10].js',
       // 非入口文件的文件名
       chunkFilename: '[name]-[hash:10].chunk.js',
     },
     plugins: [
-      // 清空 output.path 目录
-      new CleanWebpackPlugin(),
-
       new HtmlWebpackPlugin({
         title: 'HTML 文档的 title',
         minify: {
@@ -63,7 +63,7 @@ exports.create = function (isDev) {
         // 输出文件的文件名，支持子目录，如 sub/index.html
         filename: 'index.html',
         // 根据此模版生成 HTML 文件
-        template: 'view/index.html'
+        template: path.resolve(viewDir, 'index.html')
       }),
 
       // 为了保证公共 chunk 的 hash 不变
@@ -138,7 +138,8 @@ exports.loadTemplate = function () {
         // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
         {
           test: /\/src\/.*?\.hbs$/i,
-          use: 'yox-template-loader'
+          use: 'yox-template-loader',
+          exclude: /node_modules/
         }
       ]
     }
@@ -190,8 +191,8 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     })
     plugins.push(
       new MiniCssExtractPlugin({
-        filename: 'style/[hash:10].css',
-        chunkFilename: 'style/[hash:10].css',
+        filename: `style${path.sep}[hash:10].css`,
+        chunkFilename: `style${path.sep}[hash:10].css`,
       }),
     )
   }
@@ -260,7 +261,7 @@ exports.loadImage = function () {
           test: /\.ico$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions('icon/')
+            options: getFileLoaderOptions('icon')
           }
         },
         {
@@ -271,7 +272,7 @@ exports.loadImage = function () {
               // 图片小于 1KB 会转成 base64 图片
               // 图片大于或等于 1KB 就会切换到 file-loader
               // 并把 options 传给 file-loader
-              options: getUrlLoaderOptions('img/', 1000)
+              options: getUrlLoaderOptions('img', 1000)
             },
             {
               loader: 'image-webpack-loader',
@@ -315,7 +316,7 @@ exports.loadFont = function () {
           test: /\.(ttf|eot|woff|woff2)$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions('font/')
+            options: getFileLoaderOptions('font')
           }
         }
       ]

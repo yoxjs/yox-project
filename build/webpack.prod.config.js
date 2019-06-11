@@ -1,5 +1,6 @@
 const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin') // 压缩 css
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const path = require('path')
 const webpack = require('webpack')
@@ -21,6 +22,10 @@ module.exports = merge(
       minimize: false,
     },
     plugins: [
+
+      // 清空 output.path 目录
+      new CleanWebpackPlugin(),
+
       new webpack.DefinePlugin({
         'process.env': require('../config/prod.env.js')
       }),
