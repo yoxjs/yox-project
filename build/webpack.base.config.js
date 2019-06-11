@@ -196,9 +196,12 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     )
   }
   else {
+    // style-loader 会修改 options...
     loaders.push({
       loader: 'style-loader',
-      options: options
+      options: {
+        ...options
+      }
     })
   }
 
