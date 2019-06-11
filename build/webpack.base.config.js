@@ -179,29 +179,15 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     sourceMap: sourceMap
   }
 
-  // 是否需要分离出样式文件，分离文件可避免 js 加载完成前的白屏
-  const loaders = [
-    separateStyle
-      ? {
-        loader: MiniCssExtractPlugin.loader,
-        options: options
-      }
-      : {
-        loader: 'style-loader',
-        options: options
-      },
-    {
-      loader: 'postcss-loader',
-      options: options
-    },
-    {
-      loader: 'css-loader',
-      options: options
-    }
-  ]
-
+  const loaders = []
   const plugins = []
+
+  // 是否需要分离出样式文件，分离文件可避免 js 加载完成前的白屏
   if (separateStyle) {
+    loaders.push({
+      loader: MiniCssExtractPlugin.loader,
+      options: options
+    })
     plugins.push(
       new MiniCssExtractPlugin({
         filename: 'style/[hash:10].css',
@@ -209,6 +195,23 @@ exports.loadStyle = function (separateStyle, sourceMap) {
       }),
     )
   }
+  else {
+    loaders.push({
+      loader: 'style-loader',
+      options: options
+    })
+  }
+
+  loaders.push(
+    {
+      loader: 'css-loader',
+      options: options
+    },
+    {
+      loader: 'postcss-loader',
+      options: options
+    }
+  )
 
   return {
     module: {
