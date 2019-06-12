@@ -3,7 +3,7 @@ import * as YoxRouter from 'yox-router'
 import * as Bell from 'bell-ui'
 
 import fetch from 'unfetch'
-import { format, compareAsc } from 'date-fns/esm'
+import { format, compareAsc } from 'date-fns'
 
 console.log(format(new Date(2014, 1, 11), 'MM/dd/yyyy'))
 
@@ -50,11 +50,11 @@ var router = new YoxRouter.Router({
     {
       path: '/lazyload',
       load(callback) {
-        import(/* webpackChunkName: "lazyload" */ './lazyload/route').then(
-          function (route) {
-            callback(route.default)
-          }
-        )
+        // import(/* webpackChunkName: "lazyload" */ './lazyload/route').then(
+        //   function (route) {
+        //     callback(route.default)
+        //   }
+        // )
       }
     }
   ],

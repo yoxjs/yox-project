@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // 把 CSS 抽离到单独的文件
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { author, license } = require('../package.json')
 
 const banner = `(c) ${new Date().getFullYear()} ${author}\n`
@@ -72,8 +72,65 @@ exports.create = function () {
 
       new webpack.BannerPlugin(banner),
 
-    ],
+    ]
+  }
+}
 
+exports.loadTemplate = function () {
+  return {
+    module: {
+      rules: [
+        // 预编译 Yox 模板文件，从而可以在线上切换到 runtime 版本
+        // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
+        {
+          test: /\/src\/.*?\.hbs$/i,
+          use: 'yox-template-loader',
+          include: srcDir
+        }
+      ]
+    }
+  }
+}
+
+exports.loadScript = function () {
+
+  return {
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    module: {
+      rules: [
+        {
+          enforce: 'pre',
+          test: /\.[t|j]s$/i,
+          loader: 'eslint-loader',
+          include: srcDir,
+          options: {
+            formatter: require('eslint-friendly-formatter')
+          }
+        },
+        {
+          test: /\.ts$/i,
+          use: 'ts-loader',
+        }
+      ]
+    }
+  }
+
+}
+
+exports.minifyScript = function (sourceMap) {
+  return {
+    optimization: {
+      minimizer: [
+        new TerserPlugin({ sourceMap: sourceMap })
+      ],
+    }
+  }
+}
+
+exports.splitCode = function () {
+  return {
     optimization: {
       splitChunks: {
         /*
@@ -127,51 +184,7 @@ exports.create = function () {
       // 把 webpack runtime 的基础函数提取出来
       runtimeChunk: 'single'
     },
-
   }
-}
-
-exports.loadTemplate = function () {
-  return {
-    module: {
-      rules: [
-        // 预编译 Yox 模板文件，从而可以在线上切换到 runtime 版本
-        // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
-        {
-          test: /\/src\/.*?\.hbs$/i,
-          use: 'yox-template-loader',
-          include: srcDir
-        }
-      ]
-    }
-  }
-}
-
-exports.loadScript = function () {
-
-  return {
-    resolve: {
-      extensions: ['.ts', '.js', '.json']
-    },
-    module: {
-      rules: [
-        {
-          enforce: 'pre',
-          test: /\.[t|j]s$/i,
-          loader: 'eslint-loader',
-          include: srcDir,
-          options: {
-            formatter: require('eslint-friendly-formatter')
-          }
-        },
-        {
-          test: /\.ts$/i,
-          use: 'ts-loader',
-        }
-      ]
-    }
-  }
-
 }
 
 exports.loadStyle = function (separateStyle, sourceMap) {
@@ -266,6 +279,23 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     plugins: plugins
   }
 
+}
+
+exports.minifyStyle = function () {
+  return {
+    plugins: [
+      new OptimizeCssAssetsPlugin({
+        // 针对配置中 ExtractTextPlugin 实例导出的文件的文件名运行，而不是源 CSS 文件的文件名。
+        assetNameRegExp: /\.css$/g,
+        cssProcessor: require('cssnano'),
+        cssProcessorPluginOptions: {
+          safe: true,
+          preset: ['default', { discardComments: { removeAll: true } }],
+        },
+        canPrint: false
+      })
+    ]
+  }
 }
 
 exports.loadImage = function () {

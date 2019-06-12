@@ -21,7 +21,6 @@ module.exports = {
 
         // 对象禁止重复的 key
         "no-dupe-keys": "error",
-        "no-console": "error",
         "no-debugger": "error",
         "arrow-parens": 0
     }

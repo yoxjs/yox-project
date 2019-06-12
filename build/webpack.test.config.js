@@ -1,5 +1,6 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
+const webpack = require('webpack')
 const merge = require('webpack-merge')
 const baseConfig = require('./webpack.base.config.js')
 
@@ -10,6 +11,7 @@ module.exports = merge(
   baseConfig.loadStyle(true, false),
   baseConfig.loadImage(),
   baseConfig.loadFont(),
+  baseConfig.splitCode(),
   {
     mode: 'development',
     devtool: 'inline-source-map',
