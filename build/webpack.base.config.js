@@ -17,6 +17,8 @@ const viewDir = path.resolve(__dirname, '..', 'view')
 const distDir = path.resolve(__dirname, '..', 'dist')
 const thirdDir = path.resolve(__dirname, '..', 'node_modules')
 
+const distViewDir = 'view' + path.sep
+
 function getFileLoaderOptions(outputPath) {
   return {
     name: '[hash:10].[ext]',
@@ -29,6 +31,12 @@ function getUrlLoaderOptions(outputPath, limit) {
   options.limit = limit
   return options
 }
+
+// 入口页面，必须放在 viewDir 目录下
+const pages = [
+  path.resolve(viewDir, 'index1.html'),
+  path.resolve(viewDir, 'index2.html'),
+]
 
 exports.create = function () {
 
@@ -55,27 +63,44 @@ exports.create = function () {
 }
 
 exports.loadHtml = function (minify) {
+
+  const metaOptions = {
+    'viewport': 'initial-scale=1.0,width=device-width,user-scalable=0,maximum-scale=1.0,minimum-scale=1.0',
+    'format-detection': 'telephone=no',
+    'format-detection': 'email=no',
+    'screen-orientation': 'portrait',
+    'full-screen': 'yes',
+    'x5-orientation': 'portrait',
+    'x5-fullscreen': 'true',
+    'x5-page-mode': 'app',
+    'browsermode': 'application',
+    'render': 'webkit|ie-stand',
+    'apple-mobile-web-app-capable': 'yes',
+    'msapplication-tap-highlight': 'no'
+  }
+
+  const minifyOptions = {
+    // 移除 HTML 中的注释
+    removeComments: true,
+    // 删除空白符与换行符
+    collapseWhitespace: minify,
+    // 移除 <script> type 属性
+    removeScriptTypeAttributes: true,
+    // 压缩内联 CSS
+    minifyCSS: minify,
+    // 压缩内联 JS
+    minifyJS: minify
+  }
+
   return {
-    plugins: [
-      new HtmlWebpackPlugin({
-        minify: {
-          // 移除 HTML 中的注释
-          removeComments: true,
-          // 删除空白符与换行符
-          collapseWhitespace: minify,
-          // 移除 <script> type 属性
-          removeScriptTypeAttributes: true,
-          // 压缩内联 CSS
-          minifyCSS: minify,
-          // 压缩内联 JS
-          minifyJS: minify
-        },
-        // 输出文件的文件名，支持子目录，如 sub/index.html
-        filename: `view${path.sep}index.html`,
-        // 根据此模版生成 HTML 文件
-        template: path.resolve(viewDir, 'index.html')
-      }),
-    ]
+    plugins: pages.map(page => {
+      return new HtmlWebpackPlugin({
+        meta: metaOptions,
+        minify: minifyOptions,
+        filename: distViewDir + path.relative(viewDir, page),
+        template: page
+      })
+    })
   }
 }
 
