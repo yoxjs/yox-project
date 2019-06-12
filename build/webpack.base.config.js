@@ -39,7 +39,7 @@ exports.create = function () {
     output: {
       // 打包文件的输出目录
       path: distDir,
-      // path 对应的公开 URL
+      // 服务器对外公开的访问路径
       publicPath: '/',
       // 代码打包后的文件名
       filename: '[name]-[hash:10].js',
@@ -47,31 +47,35 @@ exports.create = function () {
       chunkFilename: '[name]-[hash:10].chunk.js',
     },
     plugins: [
+      // 为了保证公共 chunk 的 hash 不变
+      new webpack.HashedModuleIdsPlugin(),
+      new webpack.BannerPlugin(banner),
+    ]
+  }
+}
+
+exports.loadHtml = function (minify) {
+  return {
+    plugins: [
       new HtmlWebpackPlugin({
         title: 'HTML 文档的 title',
         minify: {
           // 移除 HTML 中的注释
           removeComments: true,
           // 删除空白符与换行符
-          collapseWhitespace: true,
+          collapseWhitespace: minify,
           // 移除 <script> type 属性
           removeScriptTypeAttributes: true,
           // 压缩内联 CSS
-          minifyCSS: true,
+          minifyCSS: minify,
           // 压缩内联 JS
-          minifyJS: true
+          minifyJS: minify
         },
         // 输出文件的文件名，支持子目录，如 sub/index.html
-        filename: 'index.html',
+        filename: `view${path.sep}index.html`,
         // 根据此模版生成 HTML 文件
         template: path.resolve(viewDir, 'index.html')
       }),
-
-      // 为了保证公共 chunk 的 hash 不变
-      new webpack.HashedModuleIdsPlugin(),
-
-      new webpack.BannerPlugin(banner),
-
     ]
   }
 }

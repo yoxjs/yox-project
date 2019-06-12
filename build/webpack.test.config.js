@@ -6,6 +6,7 @@ const baseConfig = require('./webpack.base.config.js')
 
 module.exports = merge(
   baseConfig.create(),
+  baseConfig.loadHtml(false),
   baseConfig.loadTemplate(),
   baseConfig.loadScript(),
   baseConfig.loadStyle(true, false),
@@ -28,3 +29,5 @@ module.exports = merge(
     ]
   }
 )
+
+console.log(module.exports)

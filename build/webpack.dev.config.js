@@ -11,6 +11,7 @@ const port = 8000
 
 module.exports = merge(
   baseConfig.create(),
+  baseConfig.loadHtml(false),
   baseConfig.loadTemplate(),
   baseConfig.loadScript(),
   baseConfig.loadStyle(false, true),
