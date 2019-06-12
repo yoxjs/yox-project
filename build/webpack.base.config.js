@@ -58,7 +58,6 @@ exports.loadHtml = function (minify) {
   return {
     plugins: [
       new HtmlWebpackPlugin({
-        title: 'HTML 文档的 title',
         minify: {
           // 移除 HTML 中的注释
           removeComments: true,

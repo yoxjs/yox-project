@@ -29,5 +29,3 @@ module.exports = merge(
     ]
   }
 )
-
-console.log(module.exports)
