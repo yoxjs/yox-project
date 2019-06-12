@@ -17,8 +17,6 @@ const viewDir = path.resolve(__dirname, '..', 'view')
 const distDir = path.resolve(__dirname, '..', 'dist')
 const thirdDir = path.resolve(__dirname, '..', 'node_modules')
 
-const distViewDir = 'view' + path.sep
-
 function getFileLoaderOptions(outputPath) {
   return {
     name: '[hash:10].[ext]',
@@ -34,21 +32,22 @@ function getUrlLoaderOptions(outputPath, limit) {
 
 // 入口页面，必须放在 viewDir 目录下
 const pages = [
-  path.resolve(viewDir, 'index1.html'),
-  path.resolve(viewDir, 'index2.html'),
+  {
+    page: path.resolve(viewDir, 'index.html'),
+  }
 ]
 
-exports.create = function () {
+exports.create = function (publicPath) {
 
   return {
     entry: {
-      app: path.resolve(srcDir, 'app.ts')
+      app: path.resolve(srcDir, 'app.ts'),
     },
     output: {
       // 打包文件的输出目录
       path: distDir,
       // 服务器对外公开的访问路径
-      publicPath: '/',
+      publicPath: publicPath,
       // 代码打包后的文件名
       filename: '[name]-[hash:10].js',
       // 非入口文件的文件名
@@ -93,12 +92,12 @@ exports.loadHtml = function (minify) {
   }
 
   return {
-    plugins: pages.map(page => {
+    plugins: pages.map(item => {
       return new HtmlWebpackPlugin({
         meta: metaOptions,
         minify: minifyOptions,
-        filename: distViewDir + path.relative(viewDir, page),
-        template: page
+        filename: path.relative(viewDir, item.page),
+        template: item.page,
       })
     })
   }

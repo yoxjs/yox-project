@@ -3,14 +3,12 @@ const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
-
 const baseConfig = require('./webpack.base.config.js')
 
 const port = 8000
 
 module.exports = merge(
-  baseConfig.create(),
+  baseConfig.create('/'),
   baseConfig.loadHtml(false),
   baseConfig.loadTemplate(),
   baseConfig.loadScript(),
@@ -26,16 +24,7 @@ module.exports = merge(
       port: port,
       hot: true,
       overlay: true,
-      proxy: {
-        '/comments': {
-          target: 'https://m.weibo.cn',
-          changeOrigin: true,
-          logLevel: 'debug',
-          headers: {
-            Cookie: ''
-          }
-        }
-      },
+      proxy: { },
       historyApiFallback: true
     },
     optimization: {
@@ -46,9 +35,7 @@ module.exports = merge(
       new webpack.DefinePlugin({
         'process.env': require('../config/dev.env.js')
       }),
-      new CaseSensitivePathsPlugin({
-        debug: true
-      }),
+
       new webpack.HotModuleReplacementPlugin(),
     ]
   }

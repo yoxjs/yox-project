@@ -50,7 +50,7 @@
     "bell-ui": "^0.6.0",
     "date-fns": "^1.30.1",
     "lodash-es": "^4.17.11",
-    "yox": "^1.0.0-alpha.57",
-    "yox-router": "1.0.0-alpha19"
+    "yox": "^1.0.0-alpha.58",
+    "yox-router": "^1.0.0-alpha20"
   }
 }
