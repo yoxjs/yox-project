@@ -19,7 +19,7 @@ const thirdDir = path.resolve(__dirname, '..', 'node_modules')
 
 function getFileLoaderOptions(outputPath) {
   return {
-    name: '[hash:10].[ext]',
+    name: '[contenthash].[ext]',
     outputPath: outputPath,
   }
 }
@@ -55,9 +55,9 @@ exports.create = function (publicPath) {
       // 服务器对外公开的访问路径
       publicPath: publicPath,
       // 代码打包后的文件名
-      filename: '[name]-[hash:10].js',
+      filename: '[name]-[contenthash].js',
       // 非入口文件的文件名
-      chunkFilename: '[name]-[hash:10].chunk.js',
+      chunkFilename: '[name]-[contenthash].chunk.js',
     },
     plugins: [
       // 为了保证公共 chunk 的 hash 不变
@@ -281,8 +281,8 @@ exports.loadStyle = function (separateStyle, sourceMap) {
     })
     plugins.push(
       new MiniCssExtractPlugin({
-        filename: `style${path.sep}[hash:10].css`,
-        chunkFilename: `style${path.sep}[hash:10].css`,
+        filename: `style${path.sep}[contenthash].css`,
+        chunkFilename: `style${path.sep}[contenthash].css`,
       }),
     )
   }
