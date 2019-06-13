@@ -34,6 +34,11 @@ function getUrlLoaderOptions(outputPath, limit) {
 const pages = [
   {
     page: path.resolve(viewDir, 'index.html'),
+    entry: 'app'
+  },
+  {
+    page: path.resolve(viewDir, 'login.html'),
+    entry: 'login'
   }
 ]
 
@@ -42,6 +47,7 @@ exports.create = function (publicPath) {
   return {
     entry: {
       app: path.resolve(srcDir, 'app.ts'),
+      login: path.resolve(srcDir, 'login.ts'),
     },
     output: {
       // 打包文件的输出目录
@@ -64,18 +70,61 @@ exports.create = function (publicPath) {
 exports.loadHtml = function (minify) {
 
   const metaOptions = {
-    'viewport': 'initial-scale=1.0,width=device-width,user-scalable=0,maximum-scale=1.0,minimum-scale=1.0',
-    'format-detection': 'telephone=no',
-    'format-detection': 'email=no',
-    'screen-orientation': 'portrait',
-    'full-screen': 'yes',
-    'x5-orientation': 'portrait',
-    'x5-fullscreen': 'true',
-    'x5-page-mode': 'app',
-    'browsermode': 'application',
-    'render': 'webkit|ie-stand',
-    'apple-mobile-web-app-capable': 'yes',
-    'msapplication-tap-highlight': 'no'
+    charset: {
+      charset: 'UTF-8'
+    },
+    equiv: {
+      'http-equiv': 'X-UA-Compatible',
+      content: 'ie=edge,chrome=1'
+    },
+    viewport: {
+      name: 'viewport',
+      content: 'initial-scale=1.0,width=device-width,user-scalable=0,maximum-scale=1.0,minimum-scale=1.0'
+    },
+    formatTel: {
+      name: 'format-detection',
+      content: 'telephone=no'
+    },
+    formatEmail: {
+      name: 'format-detection',
+      content: 'email=no'
+    },
+    orientation: {
+      name: 'screen-orientation',
+      content: 'portrait'
+    },
+    fullscreen: {
+      name: 'full-screen',
+      content: 'yes'
+    },
+    x5orientation: {
+      name: 'x5-orientation',
+      content: 'portrait'
+    },
+    x5fullscreen: {
+      name: 'x5-fullscreen',
+      content: 'true'
+    },
+    x5page: {
+      name: 'x5-page-mode',
+      content: 'app'
+    },
+    browsermode: {
+      name: 'browsermode',
+      content: 'application'
+    },
+    render: {
+      name: 'render',
+      content: 'webkit|ie-stand'
+    },
+    apple: {
+      name: 'apple-mobile-web-app-capable',
+      content: 'yes'
+    },
+    msapplication: {
+      name: 'msapplication-tap-highlight',
+      content: 'no'
+    }
   }
 
   const minifyOptions = {
@@ -98,6 +147,7 @@ exports.loadHtml = function (minify) {
         minify: minifyOptions,
         filename: path.relative(viewDir, item.page),
         template: item.page,
+        chunks: [item.entry]
       })
     })
   }
