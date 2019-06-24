@@ -91,9 +91,15 @@ exports.create = function () {
       // 非入口文件的文件名
       chunkFilename: getFilename(paths.js.relative, '[name].[contenthash].chunk.js'),
     },
+    resolve: {
+      // 第三方模块，优先使用 jsnext:main 指向的 ES6 模块文件
+      mainFields: ['jsnext:main', 'browser', 'main']
+    },
     plugins: [
       // 为了保证公共 chunk 的 hash 不变
       new webpack.HashedModuleIdsPlugin(),
+      // 开启 Scope Hoisting
+      new webpack.optimize.ModuleConcatenationPlugin(),
       new webpack.BannerPlugin(banner),
     ]
   }
