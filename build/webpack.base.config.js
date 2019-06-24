@@ -54,7 +54,7 @@ exports.create = function (publicPath) {
       // 服务器对外公开的访问路径
       publicPath: publicPath,
       // 代码打包后的文件名
-      filename: '[name].[contenthash].js',
+      filename: '[name].[contenthash].bundle.js',
       // 非入口文件的文件名
       chunkFilename: '[name].[contenthash].chunk.js',
     },
