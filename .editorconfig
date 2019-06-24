@@ -1,0 +1,21 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# unix 风格换行符
+[*]
+end_of_line = lf
+insert_final_newline = true
+
+# 设置这些文件的默认编码为 utf-8
+[*.{js,ts,hbs,html,xml,svg,less,scss,sass,styl,json,md}]
+charset = utf-8
+
+# 设置这些文件的缩进为 2 个空格
+[*.{js,ts,hbs,html,xml,svg,less,scss,sass,styl,json}]
+indent_style = space
+indent_size = 2
+
+## 自动 trim 行尾空白符
+trim_trailing_whitespace = true

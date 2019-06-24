@@ -13,7 +13,6 @@
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^9.5.1",
-    "case-sensitive-paths-webpack-plugin": "^2.2.0",
     "clean-webpack-plugin": "^2.0.2",
     "css-loader": "^2.1.1",
     "cssnano": "^4.1.10",
@@ -42,15 +41,14 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.7.0",
     "webpack-merge": "^4.2.1",
-    "yox-template-loader": "0.0.7"
+    "yox-template-loader": "^0.1.1"
   },
   "dependencies": {
-    "@types/date-fns": "^2.6.0",
     "@types/lodash": "^4.14.134",
     "bell-ui": "^0.6.0",
     "date-fns": "^1.30.1",
     "lodash-es": "^4.17.11",
-    "yox": "^1.0.0-alpha.62",
-    "yox-router": "^1.0.0-alpha21"
+    "yox": "^1.0.0-alpha.77",
+    "yox-router": "^1.0.0-alpha27"
   }
 }

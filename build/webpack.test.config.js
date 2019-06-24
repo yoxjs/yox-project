@@ -1,5 +1,4 @@
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin')
 
 const webpack = require('webpack')
 const merge = require('webpack-merge')
@@ -26,9 +25,6 @@ module.exports = merge(
       new CleanWebpackPlugin(),
       new webpack.DefinePlugin({
         'process.env': require('../config/test.env.js')
-      }),
-      new CaseSensitivePathsPlugin({
-        debug: true
       }),
     ]
   }

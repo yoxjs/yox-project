@@ -54,9 +54,9 @@ exports.create = function (publicPath) {
       // 服务器对外公开的访问路径
       publicPath: publicPath,
       // 代码打包后的文件名
-      filename: '[name]-[contenthash].js',
+      filename: '[name].[contenthash].js',
       // 非入口文件的文件名
-      chunkFilename: '[name]-[contenthash].chunk.js',
+      chunkFilename: '[name].[contenthash].chunk.js',
     },
     plugins: [
       // 为了保证公共 chunk 的 hash 不变
@@ -217,8 +217,8 @@ exports.splitCode = function () {
             all     你懂的
         */
         chunks: 'all',
-        // 新生成的 chunk 体积大于 30k，太小反而失去了拆分的意义
-        minSize: 30000,
+        // 新生成的 chunk 体积大于 10k，太小反而失去了拆分的意义
+        minSize: 10000,
         // 新生成的 chunk 体积没有上限
         maxSize: 0,
         // Minimum number of chunks that must share a module before splitting.
@@ -226,7 +226,7 @@ exports.splitCode = function () {
         // Maximum number of parallel requests when on-demand loading.
         maxAsyncRequests: 10,
         // Maximum number of parallel requests at an entry point
-        maxInitialRequests: 3,
+        maxInitialRequests: Infinity,
 
         automaticNameDelimiter: '~',
 
@@ -234,19 +234,15 @@ exports.splitCode = function () {
         name: true,
 
         cacheGroups: {
-          yox: {
-            test: /[\\/]node_modules[\\/]yox[\\/]/,
-            priority: 10
-          },
-          'yox-router': {
-            test: /[\\/]node_modules[\\/]yox-router[\\/]/,
-            priority: 10
-          },
-          // node_modules 中的同步模块会被打包到 vendor~*.js
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            // 一个 chunk 很可能满足多个缓存组，会被抽取到优先级高的缓存组中
-            priority: -10
+            // 用函数避免每个包配置一个对象
+            name(module) {
+              // 获取第三方包名称
+              const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
+              // 干掉一些特殊字符
+              return `vendor.${packageName.replace(/@/g, '')}`
+            }
           },
           // 其他的所有同步模块会被打包到 common~*.js中
           common: {
@@ -445,3 +441,4 @@ exports.loadFont = function () {
     }
   }
 }
+
