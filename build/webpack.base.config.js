@@ -30,6 +30,12 @@ function getUrlLoaderOptions(outputPath, publicPath, limit) {
   return options
 }
 
+function getFilename(dirname, filename) {
+  return dirname
+    ? dirname + path.sep + filename
+    : filename
+}
+
 // 入口页面，必须放在 viewDir 目录下
 const pages = [
   {
@@ -45,7 +51,9 @@ const pages = [
 // 配置静态资源的路径
 const paths = {
   js: {
+    // 相对 output.path 的路径
     relative: 'js',
+    // 公开访问路径，一般配置 CDN 域名
     public: '/',
   },
   style: {
@@ -79,9 +87,9 @@ exports.create = function () {
       // 服务器对外公开的访问路径
       publicPath: paths.js.public,
       // 代码打包后的文件名
-      filename: '[name].[contenthash].bundle.js',
+      filename: getFilename(paths.js.relative, '[name].[contenthash].bundle.js'),
       // 非入口文件的文件名
-      chunkFilename: '[name].[contenthash].chunk.js',
+      chunkFilename: getFilename(paths.js.relative, '[name].[contenthash].chunk.js'),
     },
     plugins: [
       // 为了保证公共 chunk 的 hash 不变
@@ -303,15 +311,12 @@ exports.loadStyle = function (separateStyle, sourceMap) {
       }
     })
 
-    let dirname = ''
-    if (paths.style.relative) {
-      dirname = paths.style.relative + path.sep
-    }
+    const filename = getFilename(paths.style.relative, '[contenthash].css')
 
     plugins.push(
       new MiniCssExtractPlugin({
-        filename: `${dirname}[contenthash].css`,
-        chunkFilename: `${dirname}[contenthash].css`,
+        filename: filename,
+        chunkFilename: filename,
       }),
     )
   }
