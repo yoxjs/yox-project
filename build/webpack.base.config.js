@@ -16,15 +16,16 @@ const viewDir = path.resolve(__dirname, '..', 'view')
 const distDir = path.resolve(__dirname, '..', 'dist')
 const thirdDir = path.resolve(__dirname, '..', 'node_modules')
 
-function getFileLoaderOptions(outputPath) {
+function getFileLoaderOptions(outputPath, publicPath) {
   return {
     name: '[contenthash].[ext]',
-    outputPath: outputPath,
+    outputPath,
+    publicPath,
   }
 }
 
-function getUrlLoaderOptions(outputPath, limit) {
-  const options = getFileLoaderOptions(outputPath)
+function getUrlLoaderOptions(outputPath, publicPath, limit) {
+  const options = getFileLoaderOptions(outputPath, publicPath)
   options.limit = limit
   return options
 }
@@ -41,7 +42,31 @@ const pages = [
   }
 ]
 
-exports.create = function (publicPath) {
+// 配置静态资源的路径
+const paths = {
+  js: {
+    relative: 'js',
+    public: '/',
+  },
+  style: {
+    relative: 'style',
+    public: '/',
+  },
+  font: {
+    relative: 'font',
+    public: '/',
+  },
+  image: {
+    relative: 'img',
+    public: '/',
+  },
+  icon: {
+    relative: 'icon',
+    public: '/',
+  }
+}
+
+exports.create = function () {
 
   return {
     entry: {
@@ -52,7 +77,7 @@ exports.create = function (publicPath) {
       // 打包文件的输出目录
       path: distDir,
       // 服务器对外公开的访问路径
-      publicPath: publicPath,
+      publicPath: paths.js.public,
       // 代码打包后的文件名
       filename: '[name].[contenthash].bundle.js',
       // 非入口文件的文件名
@@ -272,12 +297,21 @@ exports.loadStyle = function (separateStyle, sourceMap) {
   if (separateStyle) {
     loaders.push({
       loader: MiniCssExtractPlugin.loader,
-      options: options
+      options: {
+        ...options,
+        publicPath: paths.style.public,
+      }
     })
+
+    let dirname = ''
+    if (paths.style.relative) {
+      dirname = paths.style.relative + path.sep
+    }
+
     plugins.push(
       new MiniCssExtractPlugin({
-        filename: `style${path.sep}[contenthash].css`,
-        chunkFilename: `style${path.sep}[contenthash].css`,
+        filename: `${dirname}[contenthash].css`,
+        chunkFilename: `${dirname}[contenthash].css`,
       }),
     )
   }
@@ -379,7 +413,7 @@ exports.loadImage = function () {
           test: /\.ico$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions('icon')
+            options: getFileLoaderOptions(paths.icon.relative, paths.icon.public)
           }
         },
         {
@@ -390,7 +424,7 @@ exports.loadImage = function () {
               // 图片小于 1KB 会转成 base64 图片
               // 图片大于或等于 1KB 就会切换到 file-loader
               // 并把 options 传给 file-loader
-              options: getUrlLoaderOptions('img', 1000)
+              options: getUrlLoaderOptions(paths.image.relative, paths.image.public, 1000)
             },
             {
               loader: 'image-webpack-loader',
@@ -434,7 +468,7 @@ exports.loadFont = function () {
           test: /\.(ttf|eot|woff|woff2)$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions('font')
+            options: getFileLoaderOptions(paths.font.relative, paths.font.public)
           }
         }
       ]
