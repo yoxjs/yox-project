@@ -257,13 +257,13 @@ exports.splitCode = function () {
         */
         chunks: 'all',
         // 新生成的 chunk 体积大于 10k，太小反而失去了拆分的意义
-        minSize: 10000,
+        minSize: 10 * 1000,
         // 新生成的 chunk 体积没有上限
         maxSize: 0,
         // Minimum number of chunks that must share a module before splitting.
         minChunks: 1,
         // Maximum number of parallel requests when on-demand loading.
-        maxAsyncRequests: 10,
+        maxAsyncRequests: Infinity,
         // Maximum number of parallel requests at an entry point
         maxInitialRequests: Infinity,
 
@@ -424,7 +424,10 @@ exports.loadImage = function () {
           test: /\.ico$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions(paths.icon.relative, paths.icon.public)
+            options: getFileLoaderOptions(
+              paths.icon.relative,
+              paths.icon.public
+            )
           }
         },
         {
@@ -435,7 +438,11 @@ exports.loadImage = function () {
               // 图片小于 1KB 会转成 base64 图片
               // 图片大于或等于 1KB 就会切换到 file-loader
               // 并把 options 传给 file-loader
-              options: getUrlLoaderOptions(paths.image.relative, paths.image.public, 1000)
+              options: getUrlLoaderOptions(
+                paths.image.relative,
+                paths.image.public,
+                1000
+              )
             },
             {
               loader: 'image-webpack-loader',

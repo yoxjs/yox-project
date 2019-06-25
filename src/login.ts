@@ -1,7 +1,5 @@
 
 
-import './foo/Foo.styl'
+import trimStart from 'lodash-es/trimStart'
 
-const a = 1
-
-console.log(a)
+trimStart('-_-abc-_-', '_-', '')
