@@ -8,11 +8,16 @@
     "allowJs": true,
     "sourceMap": true,
 
+    "strict": true,
+    "noImplicitThis": true,
+
+
     "esModuleInterop": true
   },
   "include": [
     "./type/image.d.ts",
     "./type/style.d.ts",
-    "./type/template.d.ts"
+    "./type/template.d.ts",
+    "./src/**/*.ts"
   ]
 }

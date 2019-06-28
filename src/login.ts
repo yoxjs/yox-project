@@ -1,5 +1,16 @@
 
 
-import trimStart from 'lodash-es/trimStart'
+import Yox from 'yox'
 
-trimStart('-_-abc-_-', '_-', '')
+export default Yox.define({
+  events: {
+    xx() {
+
+    }
+  },
+  methods: {
+    a() {
+
+    }
+  }
+})

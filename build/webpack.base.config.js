@@ -93,7 +93,7 @@ exports.create = function () {
     },
     resolve: {
       // 第三方模块，优先使用 jsnext:main 指向的 ES6 模块文件
-      mainFields: ['jsnext:main', 'browser', 'main']
+      mainFields: ['jsnext:main', 'module', 'main']
     },
     plugins: [
       // 为了保证公共 chunk 的 hash 不变

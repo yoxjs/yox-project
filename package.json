@@ -20,7 +20,6 @@
     "eslint-friendly-formatter": "^4.0.1",
     "eslint-loader": "^2.1.2",
     "file-loader": "^3.0.1",
-    "glob-all": "^3.1.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^4.0.0-beta.5",
     "image-webpack-loader": "^5.0.0",
@@ -48,7 +47,8 @@
     "bell-ui": "^0.6.0",
     "date-fns": "^1.30.1",
     "lodash-es": "^4.17.11",
-    "yox": "^1.0.0-alpha.78",
-    "yox-router": "^1.0.0-alpha28"
+    "soga": "^0.1.2",
+    "yox": "^1.0.0-alpha.81",
+    "yox-router": "^1.0.0-alpha31"
   }
 }

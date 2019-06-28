@@ -1,6 +1,6 @@
 # yox-project
 
-Yox + Yox-Router 模板项目（不断完善中...）
+Yox + Yox-Router 模板项目（完善中，不要用...）
 
 * 强制使用 `TypeScript` 进行项目开发（何苦用 Babel 呢）
 * 支持 `Less/Sass/Stylus` 三种动态样式语言，可任选其一
