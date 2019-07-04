@@ -14,7 +14,6 @@ const banner = `(c) ${new Date().getFullYear()} ${author}\n`
 const srcDir = path.resolve(__dirname, '..', 'src')
 const viewDir = path.resolve(__dirname, '..', 'view')
 const distDir = path.resolve(__dirname, '..', 'dist')
-const thirdDir = path.resolve(__dirname, '..', 'node_modules')
 
 function getFileLoaderOptions(outputPath, publicPath) {
   return {
@@ -48,33 +47,7 @@ const pages = [
   }
 ]
 
-// 配置静态资源的路径
-const paths = {
-  js: {
-    // 相对 output.path 的路径
-    relative: 'js',
-    // 公开访问路径，一般配置 CDN 域名
-    public: '/',
-  },
-  style: {
-    relative: 'style',
-    public: '/',
-  },
-  font: {
-    relative: 'font',
-    public: '/',
-  },
-  image: {
-    relative: 'img',
-    public: '/',
-  },
-  icon: {
-    relative: 'icon',
-    public: '/',
-  }
-}
-
-exports.create = function () {
+exports.create = function (env) {
 
   return {
     entry: {
@@ -85,11 +58,11 @@ exports.create = function () {
       // 打包文件的输出目录
       path: distDir,
       // 服务器对外公开的访问路径
-      publicPath: paths.js.public,
+      publicPath: env.outputPaths.js.public,
       // 代码打包后的文件名
-      filename: getFilename(paths.js.relative, '[name].[contenthash].bundle.js'),
+      filename: getFilename(env.outputPaths.js.relative, '[name].[contenthash].bundle.js'),
       // 非入口文件的文件名
-      chunkFilename: getFilename(paths.js.relative, '[name].[contenthash].chunk.js'),
+      chunkFilename: getFilename(env.outputPaths.js.relative, '[name].[contenthash].chunk.js'),
     },
     resolve: {
       // 第三方模块，优先使用 jsnext:main 指向的 ES6 模块文件
@@ -105,7 +78,7 @@ exports.create = function () {
   }
 }
 
-exports.loadHtml = function (minify) {
+exports.loadHtml = function (env, minify) {
 
   const metaOptions = {
     charset: {
@@ -191,7 +164,7 @@ exports.loadHtml = function (minify) {
   }
 }
 
-exports.loadTemplate = function () {
+exports.loadTemplate = function (env) {
   return {
     module: {
       rules: [
@@ -207,7 +180,7 @@ exports.loadTemplate = function () {
   }
 }
 
-exports.loadScript = function () {
+exports.loadScript = function (env) {
 
   return {
     resolve: {
@@ -234,7 +207,7 @@ exports.loadScript = function () {
 
 }
 
-exports.minifyScript = function (sourceMap) {
+exports.minifyScript = function (env, sourceMap) {
   return {
     optimization: {
       minimizer: [
@@ -244,7 +217,7 @@ exports.minifyScript = function (sourceMap) {
   }
 }
 
-exports.splitCode = function () {
+exports.splitCode = function (env) {
   return {
     optimization: {
       splitChunks: {
@@ -298,7 +271,7 @@ exports.splitCode = function () {
   }
 }
 
-exports.loadStyle = function (separateStyle, sourceMap) {
+exports.loadStyle = function (env, separateStyle, sourceMap) {
 
   const options = {
     sourceMap: sourceMap
@@ -313,11 +286,11 @@ exports.loadStyle = function (separateStyle, sourceMap) {
       loader: MiniCssExtractPlugin.loader,
       options: {
         ...options,
-        publicPath: paths.style.public,
+        publicPath: env.outputPaths.style.public,
       }
     })
 
-    const filename = getFilename(paths.style.relative, '[contenthash].css')
+    const filename = getFilename(env.outputPaths.style.relative, '[contenthash].css')
 
     plugins.push(
       new MiniCssExtractPlugin({
@@ -398,7 +371,7 @@ exports.loadStyle = function (separateStyle, sourceMap) {
 
 }
 
-exports.minifyStyle = function () {
+exports.minifyStyle = function (env) {
   return {
     plugins: [
       new OptimizeCssAssetsPlugin({
@@ -415,7 +388,7 @@ exports.minifyStyle = function () {
   }
 }
 
-exports.loadImage = function () {
+exports.loadImage = function (env) {
 
   return {
     module: {
@@ -425,8 +398,8 @@ exports.loadImage = function () {
           use: {
             loader: 'file-loader',
             options: getFileLoaderOptions(
-              paths.icon.relative,
-              paths.icon.public
+              env.outputPaths.icon.relative,
+              env.outputPaths.icon.public
             )
           }
         },
@@ -439,8 +412,8 @@ exports.loadImage = function () {
               // 图片大于或等于 1KB 就会切换到 file-loader
               // 并把 options 传给 file-loader
               options: getUrlLoaderOptions(
-                paths.image.relative,
-                paths.image.public,
+                env.outputPaths.image.relative,
+                env.outputPaths.image.public,
                 1000
               )
             },
@@ -478,7 +451,7 @@ exports.loadImage = function () {
   }
 }
 
-exports.loadFont = function () {
+exports.loadFont = function (env) {
   return {
     module: {
       rules: [
@@ -486,7 +459,7 @@ exports.loadFont = function () {
           test: /\.(ttf|eot|woff|woff2)$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions(paths.font.relative, paths.font.public)
+            options: getFileLoaderOptions(env.outputPaths.font.relative, env.outputPaths.font.public)
           }
         }
       ]

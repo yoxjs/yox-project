@@ -4,17 +4,18 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 
 const baseConfig = require('./webpack.base.config.js')
+const env = require('../config/dev.env.js')
 
 const port = 8000
 
 module.exports = merge(
-  baseConfig.create(),
-  baseConfig.loadHtml(false),
-  baseConfig.loadTemplate(),
-  baseConfig.loadScript(),
-  baseConfig.loadStyle(false, true),
-  baseConfig.loadImage(),
-  baseConfig.loadFont(),
+  baseConfig.create(env),
+  baseConfig.loadHtml(env, false),
+  baseConfig.loadTemplate(env),
+  baseConfig.loadScript(env),
+  baseConfig.loadStyle(env, false, true),
+  baseConfig.loadImage(env),
+  baseConfig.loadFont(env),
   {
     mode: 'development',
     devtool: 'inline-source-map',
@@ -32,10 +33,10 @@ module.exports = merge(
       minimize: false,
     },
     plugins: [
+      // 环境变量
       new webpack.DefinePlugin({
-        'process.env': require('../config/dev.env.js')
+        'process.env': env.vars
       }),
-
       new webpack.HotModuleReplacementPlugin(),
     ]
   }
