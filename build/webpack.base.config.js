@@ -58,11 +58,11 @@ exports.create = function (env) {
       // 打包文件的输出目录
       path: distDir,
       // 服务器对外公开的访问路径
-      publicPath: env.outputPaths.js.public,
+      publicPath: env.assetPaths.js.public,
       // 代码打包后的文件名
-      filename: getFilename(env.outputPaths.js.relative, '[name].[contenthash].bundle.js'),
+      filename: getFilename(env.assetPaths.js.relative, '[name].[contenthash].bundle.js'),
       // 非入口文件的文件名
-      chunkFilename: getFilename(env.outputPaths.js.relative, '[name].[contenthash].chunk.js'),
+      chunkFilename: getFilename(env.assetPaths.js.relative, '[name].[contenthash].chunk.js'),
     },
     resolve: {
       // 第三方模块，优先使用 jsnext:main 指向的 ES6 模块文件
@@ -300,11 +300,11 @@ exports.loadStyle = function (env, separateStyle, sourceMap) {
       loader: MiniCssExtractPlugin.loader,
       options: {
         ...options,
-        publicPath: env.outputPaths.style.public,
+        publicPath: env.assetPaths.style.public,
       }
     })
 
-    const filename = getFilename(env.outputPaths.style.relative, '[contenthash].css')
+    const filename = getFilename(env.assetPaths.style.relative, '[contenthash].css')
 
     plugins.push(
       new MiniCssExtractPlugin({
@@ -412,8 +412,8 @@ exports.loadImage = function (env) {
           use: {
             loader: 'file-loader',
             options: getFileLoaderOptions(
-              env.outputPaths.icon.relative,
-              env.outputPaths.icon.public
+              env.assetPaths.icon.relative,
+              env.assetPaths.icon.public
             )
           }
         },
@@ -426,8 +426,8 @@ exports.loadImage = function (env) {
               // 图片大于或等于 env.base64Limit 就会切换到 file-loader
               // 并把 options 传给 file-loader
               options: getUrlLoaderOptions(
-                env.outputPaths.image.relative,
-                env.outputPaths.image.public,
+                env.assetPaths.image.relative,
+                env.assetPaths.image.public,
                 env.base64Limit
               )
             },
@@ -473,7 +473,7 @@ exports.loadFont = function (env) {
           test: /\.(ttf|eot|woff|woff2)$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions(env.outputPaths.font.relative, env.outputPaths.font.public)
+            options: getFileLoaderOptions(env.assetPaths.font.relative, env.assetPaths.font.public)
           }
         }
       ]
