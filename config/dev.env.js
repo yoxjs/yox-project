@@ -4,6 +4,9 @@ module.exports = {
     NODE_ENV: '"development"',
   },
 
+  // 图片小于 1KB 会转成 base64 图片
+  base64Limit: 1000,
+
   // 配置静态资源的路径
   outputPaths: {
     js: {

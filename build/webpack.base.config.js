@@ -189,6 +189,24 @@ exports.loadScript = function (env) {
     module: {
       rules: [
         {
+          test: /\.ts$/i,
+          use: 'ts-loader',
+        }
+      ]
+    }
+  }
+
+}
+
+exports.loadEslint = function (env) {
+
+  return {
+    resolve: {
+      extensions: ['.ts', '.js', '.json']
+    },
+    module: {
+      rules: [
+        {
           enforce: 'pre',
           test: /\.[t|j]s$/i,
           loader: 'eslint-loader',
@@ -196,10 +214,6 @@ exports.loadScript = function (env) {
           options: {
             formatter: require('eslint-friendly-formatter')
           }
-        },
-        {
-          test: /\.ts$/i,
-          use: 'ts-loader',
         }
       ]
     }
@@ -408,13 +422,13 @@ exports.loadImage = function (env) {
           use: [
             {
               loader: 'url-loader',
-              // 图片小于 1KB 会转成 base64 图片
-              // 图片大于或等于 1KB 就会切换到 file-loader
+              // 图片小于 env.base64Limit 会转成 base64 图片
+              // 图片大于或等于 env.base64Limit 就会切换到 file-loader
               // 并把 options 传给 file-loader
               options: getUrlLoaderOptions(
                 env.outputPaths.image.relative,
                 env.outputPaths.image.public,
-                1000
+                env.base64Limit
               )
             },
             {
