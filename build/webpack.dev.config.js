@@ -29,8 +29,7 @@ module.exports = merge(
       historyApiFallback: true
     },
     optimization: {
-      // 是否压缩 js
-      minimize: false,
+      minimize: env.minimize,
     },
     plugins: [
       // 环境变量

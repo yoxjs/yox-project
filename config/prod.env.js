@@ -5,6 +5,9 @@ module.exports = {
     NODE_ENV: '"production"',
   },
 
+  // 是否压缩
+  minimize: true,
+
   // 图片小于 1KB 会转成 base64 图片
   base64Limit: 1000,
 

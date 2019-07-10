@@ -19,8 +19,7 @@ module.exports = merge(
     mode: 'development',
     devtool: 'inline-source-map',
     optimization: {
-      // 是否压缩 js
-      minimize: false,
+      minimize: env.minimize,
     },
     plugins: [
       // 清空 output.path 目录

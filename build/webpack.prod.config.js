@@ -20,8 +20,7 @@ module.exports = merge(
   {
     mode: 'production',
     optimization: {
-      // 是否压缩 js
-      minimize: true,
+      minimize: env.minimize,
     },
     plugins: [
       // 清空 output.path 目录
