@@ -5,15 +5,14 @@
 
     "outDir": "./dist/",
 
-    "moduleResolution": "node",
-
     "allowJs": true,
     "sourceMap": true,
 
     "strict": true,
     "noImplicitThis": true,
 
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "moduleResolution": "node"
   },
   "include": [
     "./global.d.ts",
