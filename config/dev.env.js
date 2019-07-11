@@ -5,6 +5,8 @@ module.exports = {
     NODE_ENV: '"development"',
   },
 
+  hashType: 'hash',
+
   // 是否压缩
   minimize: false,
 

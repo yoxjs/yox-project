@@ -15,16 +15,16 @@ const srcDir = path.resolve(__dirname, '..', 'src')
 const viewDir = path.resolve(__dirname, '..', 'view')
 const distDir = path.resolve(__dirname, '..', 'dist')
 
-function getFileLoaderOptions(outputPath, publicPath) {
+function getFileLoaderOptions(hashType, outputPath, publicPath) {
   return {
-    name: '[contenthash].[ext]',
+    name: `[${hashType}].[ext]`,
     outputPath,
     publicPath,
   }
 }
 
-function getUrlLoaderOptions(outputPath, publicPath, limit) {
-  const options = getFileLoaderOptions(outputPath, publicPath)
+function getUrlLoaderOptions(hashType, outputPath, publicPath, limit) {
+  const options = getFileLoaderOptions(hashType, outputPath, publicPath)
   options.limit = limit
   return options
 }
@@ -60,9 +60,15 @@ exports.create = function (env) {
       // 服务器对外公开的访问路径
       publicPath: env.assetPaths.js.public,
       // 代码打包后的文件名
-      filename: getFilename(env.assetPaths.js.relative, '[name].[contenthash].bundle.js'),
+      filename: getFilename(
+        env.assetPaths.js.relative,
+        `[name].[${env.hashType}].bundle.js`
+      ),
       // 非入口文件的文件名
-      chunkFilename: getFilename(env.assetPaths.js.relative, '[name].[contenthash].chunk.js'),
+      chunkFilename: getFilename(
+        env.assetPaths.js.relative,
+        `[name].[${env.hashType}].chunk.js`
+      ),
     },
     resolve: {
       // 第三方模块，优先使用 jsnext:main 指向的 ES6 模块文件
@@ -304,7 +310,10 @@ exports.loadStyle = function (env, separateStyle, sourceMap) {
       }
     })
 
-    const filename = getFilename(env.assetPaths.style.relative, '[contenthash].css')
+    const filename = getFilename(
+      env.assetPaths.style.relative,
+      `[${env.hashType}].css`
+    )
 
     plugins.push(
       new MiniCssExtractPlugin({
@@ -412,6 +421,7 @@ exports.loadImage = function (env) {
           use: {
             loader: 'file-loader',
             options: getFileLoaderOptions(
+              env.hashType,
               env.assetPaths.icon.relative,
               env.assetPaths.icon.public
             )
@@ -426,6 +436,7 @@ exports.loadImage = function (env) {
               // 图片大于或等于 env.base64Limit 就会切换到 file-loader
               // 并把 options 传给 file-loader
               options: getUrlLoaderOptions(
+                env.hashType,
                 env.assetPaths.image.relative,
                 env.assetPaths.image.public,
                 env.base64Limit
@@ -473,7 +484,11 @@ exports.loadFont = function (env) {
           test: /\.(ttf|eot|woff|woff2)$/i,
           use: {
             loader: 'file-loader',
-            options: getFileLoaderOptions(env.assetPaths.font.relative, env.assetPaths.font.public)
+            options: getFileLoaderOptions(
+              env.hashType,
+              env.assetPaths.font.relative,
+              env.assetPaths.font.public
+            )
           }
         }
       ]

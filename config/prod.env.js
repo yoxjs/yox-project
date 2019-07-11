@@ -5,6 +5,8 @@ module.exports = {
     NODE_ENV: '"production"',
   },
 
+  hashType: 'contenthash',
+
   // 是否压缩
   minimize: true,
 

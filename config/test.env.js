@@ -5,6 +5,8 @@ module.exports = {
     NODE_ENV: '"test"',
   },
 
+  hashType: 'contenthash',
+
   // 是否压缩
   minimize: false,
 
