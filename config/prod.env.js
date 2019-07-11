@@ -17,23 +17,23 @@ module.exports = {
   assetPaths: {
     js: {
       relative: 'js',
-      public: '/',
+      public: '/js/',
     },
     style: {
       relative: 'style',
-      public: '/',
+      public: '/style/',
     },
     font: {
       relative: 'font',
-      public: '/',
+      public: '/font/',
     },
     image: {
       relative: 'img',
-      public: '/',
+      public: '/img/',
     },
     icon: {
       relative: 'icon',
-      public: '/',
+      public: '/icon/',
     }
   },
 
