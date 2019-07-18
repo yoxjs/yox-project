@@ -11,9 +11,13 @@ const { author, license } = require('../package.json')
 const banner = `(c) ${new Date().getFullYear()} ${author}\n`
              + `Released under the ${license} License.`
 
-const srcDir = path.resolve(__dirname, '..', 'src')
-const viewDir = path.resolve(__dirname, '..', 'view')
-const distDir = path.resolve(__dirname, '..', 'dist')
+const baseDir = path.resolve(__dirname, '..')
+const srcDir = path.resolve(baseDir, 'src')
+const viewDir = path.resolve(baseDir, 'view')
+const distDir = path.resolve(baseDir, 'dist')
+
+const nodeModulesDir = path.resolve(baseDir, 'node_modules')
+const yoxDir = path.resolve(nodeModulesDir, 'yox', 'dist')
 
 function getFileLoaderOptions(hashType, outputPath, publicPath) {
   return {
@@ -49,6 +53,20 @@ const pages = [
 
 exports.create = function (env) {
 
+  // 配置一些常用的目录别名
+  // 比如 import('@common/a') 实际会导入 src/common/a
+  const alias = {
+    '@src': srcDir,
+    '@common': path.resolve(srcDir, 'common'),
+    // 如果开启压缩，Yox 使用 runtime 版本
+    'yox': path.resolve(
+      yoxDir,
+      env.legacy ? 'legacy' : 'standard',
+      env.minimize ? 'runtime' : 'dev',
+      'yox.esm.js'
+    )
+  }
+
   return {
     entry: {
       app: path.resolve(srcDir, 'app.ts'),
@@ -71,7 +89,16 @@ exports.create = function (env) {
       ),
     },
     resolve: {
-      // 第三方模块，优先使用 jsnext:main 指向的 ES6 模块文件
+      alias,
+
+      // modules 的默认值会从当前目录下的 node_modules 目录去找模块
+      // 找不到，再去上一级目录下的 node_modules 目录找，以此类推
+      // 但是我们并不需要往上找，写死项目根目录的 node_modules 就行了
+      modules: [
+        nodeModulesDir
+      ],
+
+      // 第三方模块，优先使用 jsnext:main 和 module 导入 ES6 模块文件
       mainFields: ['jsnext:main', 'module', 'main']
     },
     plugins: [

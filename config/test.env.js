@@ -2,10 +2,13 @@ module.exports = {
 
   // 环境变量
   vars: {
-    NODE_ENV: '"test"',
+    NODE_ENV: JSON.stringify('test'),
   },
 
   hashType: 'contenthash',
+
+  // 是否兼容低版本 IE
+  legacy: false,
 
   // 是否压缩
   minimize: false,
