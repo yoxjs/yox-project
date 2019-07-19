@@ -12,12 +12,13 @@ const banner = `(c) ${new Date().getFullYear()} ${author}\n`
              + `Released under the ${license} License.`
 
 const baseDir = path.resolve(__dirname, '..')
+
 const srcDir = path.resolve(baseDir, 'src')
 const viewDir = path.resolve(baseDir, 'view')
 const distDir = path.resolve(baseDir, 'dist')
 
-const nodeModulesDir = path.resolve(baseDir, 'node_modules')
-const yoxDir = path.resolve(nodeModulesDir, 'yox', 'dist')
+const modulesDir = path.resolve(baseDir, 'node_modules')
+const yoxDir = path.resolve(modulesDir, 'yox', 'dist')
 
 function getFileLoaderOptions(hashType, outputPath, publicPath) {
   return {
@@ -54,10 +55,13 @@ const pages = [
 exports.create = function (env) {
 
   // 配置一些常用的目录别名
-  // 比如 import('@common/a') 实际会导入 src/common/a
   const alias = {
+    // 比如 import('@src/a') 实际会导入 src/a
     '@src': srcDir,
+
+    // 比如 import('@common/a') 实际会导入 src/common/a
     '@common': path.resolve(srcDir, 'common'),
+
     // 如果开启压缩，Yox 使用 runtime 版本
     'yox': path.resolve(
       yoxDir,
@@ -95,17 +99,20 @@ exports.create = function (env) {
       // 找不到，再去上一级目录下的 node_modules 目录找，以此类推
       // 但是我们并不需要往上找，写死项目根目录的 node_modules 就行了
       modules: [
-        nodeModulesDir
+        modulesDir
       ],
 
       // 第三方模块，优先使用 jsnext:main 和 module 导入 ES6 模块文件
-      mainFields: ['jsnext:main', 'module', 'main']
+      mainFields: ['jsnext:main', 'module', 'main'],
+
+      extensions: ['.ts', '.js', '.json'],
     },
     plugins: [
       // 为了保证公共 chunk 的 hash 不变
       new webpack.HashedModuleIdsPlugin(),
       // 开启 Scope Hoisting
       new webpack.optimize.ModuleConcatenationPlugin(),
+      // 给输出的文件加上 banner
       new webpack.BannerPlugin(banner),
     ]
   }
@@ -216,9 +223,6 @@ exports.loadTemplate = function (env) {
 exports.loadScript = function (env) {
 
   return {
-    resolve: {
-      extensions: ['.ts', '.js', '.json']
-    },
     module: {
       rules: [
         {
@@ -231,12 +235,10 @@ exports.loadScript = function (env) {
 
 }
 
+// 想用 eslint 请自己折腾
 exports.loadEslint = function (env) {
 
   return {
-    resolve: {
-      extensions: ['.ts', '.js', '.json']
-    },
     module: {
       rules: [
         {

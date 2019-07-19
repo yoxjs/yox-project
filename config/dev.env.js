@@ -22,11 +22,11 @@ module.exports = {
   assetPaths: {
     js: {
       relative: 'js',
-      public: '/js/',
+      public: '/',
     },
     style: {
       relative: 'style',
-      public: '/style/',
+      public: '/',
     },
     font: {
       relative: 'font',
