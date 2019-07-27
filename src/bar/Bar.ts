@@ -1,7 +1,8 @@
+import Yox from 'yox'
 import template from './Bar.hbs'
 import './Bar.styl'
 
-export default {
+export default Yox.define({
   template,
   data() {
     return {
@@ -13,4 +14,4 @@ export default {
       // this.$Message.success('恭喜你，这是一条成功消息')
     }
   }
-}
+})

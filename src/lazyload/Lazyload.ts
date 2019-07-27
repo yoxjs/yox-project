@@ -1,5 +1,6 @@
+import Yox from 'yox'
 import template from './Lazyload.hbs'
 
-export default {
+export default Yox.define({
   template
-}
+})

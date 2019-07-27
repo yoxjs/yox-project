@@ -12,7 +12,7 @@ import 'bell-ui/dist/bell-ui.css'
 Yox.use(YoxRouter)
 Yox.use(Bell)
 
-var router = new YoxRouter.Router({
+const router = new YoxRouter.Router({
   el: '#app',
   routes: [
     {
