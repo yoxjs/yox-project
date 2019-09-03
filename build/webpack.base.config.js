@@ -211,7 +211,7 @@ exports.loadTemplate = function (env) {
         // 预编译 Yox 模板文件，从而可以在线上切换到 runtime 版本
         // 这里采用 .hbs 扩展名，这是 handlebars 模板文件的扩展名
         {
-          test: /\/src\/.*?\.hbs$/i,
+          test: /\.hbs$/i,
           use: 'yox-template-loader',
           include: srcDir
         }
