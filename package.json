@@ -12,10 +12,10 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "autoprefixer": "^9.5.1",
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
     "@types/lodash": "^4.14.134",
+    "autoprefixer": "^9.5.1",
     "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^2.0.2",
     "css-loader": "^2.1.1",
@@ -47,7 +47,7 @@
     "yox-template-loader": "^0.2.8"
   },
   "dependencies": {
-    "bell-ui": "^0.10.0",
+    "bell-ui": "^0.10.1",
     "date-fns": "^1.30.1",
     "lodash-es": "^4.17.11",
     "soga": "^0.1.7",
