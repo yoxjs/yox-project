@@ -1,0 +1,30 @@
+<div>
+
+  <Form ref="form" labelWidth="80" showMessage>
+    <FormItem label="帐号" prop="username">
+      <Input
+        model="username"
+        placeholder="输入帐号"
+      />
+    </FormItem>
+    <FormItem label="密码" prop="password">
+      <Input
+        model="password"
+        placeholder="输入密码"
+        type="password"
+        secure
+      />
+    </FormItem>
+    <FormItem>
+      <Button
+        block
+        type="primary"
+        on-click="submit()"
+      >
+        登录
+      </Button>
+    </FormItem>
+  </Form>
+
+
+</div>

@@ -40,17 +40,7 @@ function getFilename(dirname, filename) {
     : filename
 }
 
-// 入口页面，必须放在 viewDir 目录下
-const pages = [
-  {
-    page: path.resolve(viewDir, 'index.html'),
-    entry: 'app'
-  },
-  {
-    page: path.resolve(viewDir, 'login.html'),
-    entry: 'login'
-  }
-]
+const pages = require('../config/entry.js')
 
 exports.create = function (env) {
 
@@ -71,11 +61,14 @@ exports.create = function (env) {
     )
   }
 
+  const entry = {}
+
+  for (let key in pages) {
+    entry[key] = path.resolve(srcDir, pages[key].entry)
+  }
+
   return {
-    entry: {
-      app: path.resolve(srcDir, 'app.ts'),
-      login: path.resolve(srcDir, 'login.ts'),
-    },
+    entry,
     output: {
       // 打包文件的输出目录
       path: distDir,
@@ -192,13 +185,16 @@ exports.loadHtml = function (env, minify) {
   }
 
   return {
-    plugins: pages.map(item => {
+    plugins: Object.keys(pages).map(key => {
+
+      const item = pages[key]
+
       return new HtmlWebpackPlugin({
         meta: metaOptions,
         minify: minifyOptions,
-        filename: path.relative(viewDir, item.page),
-        template: item.page,
-        chunks: [item.entry]
+        filename: item.page,
+        template: path.resolve(viewDir, item.page),
+        chunks: [key]
       })
     })
   }
@@ -225,6 +221,11 @@ exports.loadScript = function (env) {
   return {
     module: {
       rules: [
+        {
+          test: /\.m?js$/,
+          exclude: /node_modules/,
+          use: 'babel-loader'
+        },
         {
           test: /\.ts$/i,
           use: 'ts-loader',
