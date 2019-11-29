@@ -191,6 +191,7 @@ exports.loadHtml = function (env, minify) {
       const item = pages[key]
 
       return new HtmlWebpackPlugin({
+        favicon: 'src/common/img/favicon.ico',
         meta: metaOptions,
         minify: minifyOptions,
         filename: item.page,
@@ -483,7 +484,7 @@ exports.loadImage = function (env) {
                 },
                 // https://www.npmjs.com/package/imagemin-pngquant#options
                 pngquant: {
-                  quality: '65-80',
+                  quality: [0.65, 0.90],
                   speed: 4
                 },
                 // https://www.npmjs.com/package/imagemin-gifsicle#options
