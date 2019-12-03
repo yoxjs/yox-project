@@ -1,6 +1,8 @@
 import Yox from 'yox'
 import template from './login/Login.hbs'
 
+import validator from './common/validator'
+
 import * as Bell from 'bell-ui'
 Yox.use(Bell)
 
@@ -13,7 +15,7 @@ new Yox({
   },
   methods: {
     submit() {
-      let errors = this.$refs.form.validate(
+      let errors = validator.validate(
         {
           username: this.get('username'),
           password: this.get('password'),
@@ -41,6 +43,7 @@ new Yox({
           }
         }
       )
+      this.$refs.form.validate(errors)
       if (errors) {
         return
       }
