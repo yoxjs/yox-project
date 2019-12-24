@@ -10,7 +10,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const { author, license } = require('../package.json')
 
 const banner = `(c) ${new Date().getFullYear()} ${author}\n`
-             + `Released under the ${license} License.`
+  + `Released under the ${license} License.`
 
 const baseDir = path.resolve(__dirname, '..')
 
@@ -58,7 +58,7 @@ exports.create = function (env) {
       yoxDir,
       env.legacy ? 'legacy' : 'standard',
       env.minimize ? 'runtime' : 'dev',
-      'yox.esm.js'
+      env.legacy ? 'yox.js' : 'yox.esm.js'
     )
   }
 
@@ -97,7 +97,9 @@ exports.create = function (env) {
       ],
 
       // 第三方模块，优先使用 jsnext:main 和 module 导入 ES6 模块文件
-      mainFields: ['jsnext:main', 'module', 'main'],
+      mainFields: env.legacy
+        ? ['main']
+        : ['jsnext:main', 'module', 'main'],
 
       extensions: ['.ts', '.js', '.json'],
     },
