@@ -48,7 +48,7 @@
     "yox-template-loader": "^0.3.2"
   },
   "dependencies": {
-    "bell-ui": "^0.12.0",
+    "bell-ui": "^0.12.1",
     "date-fns": "^2.8.0",
     "lodash-es": "^4.17.11",
     "soga": "0.1.9",

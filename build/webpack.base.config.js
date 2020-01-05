@@ -500,10 +500,6 @@ exports.loadImage = function (env) {
                 // https://github.com/svg/svgo#what-it-can-do
                 svgo: {
 
-                },
-                // https://www.npmjs.com/package/imagemin-webp#options
-                webp: {
-                  quality: 75
                 }
               }
             }
