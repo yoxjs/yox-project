@@ -479,29 +479,6 @@ exports.loadImage = function (env) {
                 env.assetPaths.image.public,
                 env.base64Limit
               )
-            },
-            {
-              loader: 'image-webpack-loader',
-              options: {
-                // https://www.npmjs.com/package/imagemin-mozjpeg#options
-                mozjpeg: {
-                  progressive: true,
-                  quality: 65
-                },
-                // https://www.npmjs.com/package/imagemin-pngquant#options
-                pngquant: {
-                  quality: [0.65, 0.90],
-                  speed: 4
-                },
-                // https://www.npmjs.com/package/imagemin-gifsicle#options
-                gifsicle: {
-                  interlaced: false,
-                },
-                // https://github.com/svg/svgo#what-it-can-do
-                svgo: {
-
-                }
-              }
             }
           ]
         },
