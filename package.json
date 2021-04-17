@@ -44,15 +44,15 @@
     "webpack-cli": "^3.3.2",
     "webpack-dev-server": "^3.7.0",
     "webpack-merge": "^4.2.1",
-    "yox-template-loader": "^0.5.3"
+    "yox-template-loader": "^0.6.0"
   },
   "dependencies": {
-    "bell-ui": "^0.15.2",
+    "bell-ui": "^0.15.9",
     "date-fns": "^2.8.0",
     "lodash-es": "^4.17.11",
     "soga": "0.1.9",
     "x-validator": "^0.1.0",
-    "yox": "^1.0.0-alpha.213",
-    "yox-router": "1.0.0-alpha.113"
+    "yox": "^1.0.0-alpha.220",
+    "yox-router": "1.0.0-alpha.120"
   }
 }
